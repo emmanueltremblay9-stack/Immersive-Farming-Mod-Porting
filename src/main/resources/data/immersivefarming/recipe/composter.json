@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IHI",
+    "HCH",
+    "IHI"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:composter"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "immersivefarming:composter"
+  }
+}

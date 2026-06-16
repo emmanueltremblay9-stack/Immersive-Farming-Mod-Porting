@@ -1,0 +1,20 @@
+{
+    "entity.cart.attach": {
+        "sounds": [
+            "immersivefarming:entity/cart/attach"
+        ],
+        "subtitle": "subtitles.immersivefarming.cart.attached"
+    },
+    "entity.cart.detach": {
+        "sounds": [
+            "immersivefarming:entity/cart/detach"
+        ],
+        "subtitle": "subtitles.immersivefarming.cart.detached"
+    },
+    "entity.cart.place": {
+        "sounds": [
+            "immersivefarming:entity/cart/place"
+        ],
+        "subtitle": "subtitles.immersivefarming.cart.placed"
+    }
+}

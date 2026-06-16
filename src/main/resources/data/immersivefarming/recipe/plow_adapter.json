@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "tools",
+  "pattern": [
+    " I ",
+    "IWI",
+    " H "
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:iron_hoe"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "W": {
+      "item": "immersivefarming:wheel"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "immersivefarming:plow"
+  }
+}

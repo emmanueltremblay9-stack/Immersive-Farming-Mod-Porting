@@ -1,0 +1,4 @@
+{
+  "title": "AstikorCarts Redux",
+  "text": "This fork provides compatibility items, tags, and hooks instead of copying the legacy cart implementation."
+}

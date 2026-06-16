@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "tools",
+  "pattern": [
+    " C ",
+    "DWD",
+    " H "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:composter"
+    },
+    "D": {
+      "item": "minecraft:dispenser"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "W": {
+      "item": "immersivefarming:wheel"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "immersivefarming:sower"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "block.immersivefarming.soil": "Prepared Soil",
+  "block.immersivefarming.sprinkler": "Sprinkler",
+  "block.immersivefarming.sprinkler_extended": "High-Pressure Sprinkler",
+  "block.immersivefarming.composter": "Industrial Composter",
+  "block.immersivefarming.dead_crop": "Dead Crop",
+  "block.immersivefarming.treated_water": "Treated Water",
+  "item.immersivefarming.treated_water_bucket": "Treated Water Bucket",
+  "item.immersivefarming.compost": "Compost",
+  "item.immersivefarming.wheel": "Cart Wheel",
+  "item.immersivefarming.plow": "Astikor Plow Adapter",
+  "item.immersivefarming.sower": "Astikor Sower Adapter",
+  "itemGroup.immersivefarming": "Immersive Farming",
+  "tooltip.immersivefarming.astikor_placeholder": "Compatibility item for AstikorCarts Redux-style integrations.",
+  "message.immersivefarming.composter_formed": "Industrial composter formed.",
+  "message.immersivefarming.composter_incomplete": "Industrial composter structure is incomplete.",
+  "message.immersivefarming.composter_already_formed": "Industrial composter is already formed."
+}
