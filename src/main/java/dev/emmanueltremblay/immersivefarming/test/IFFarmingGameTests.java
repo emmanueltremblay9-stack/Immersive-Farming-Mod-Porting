@@ -6,6 +6,7 @@ import dev.emmanueltremblay.immersivefarming.block.FertileSoilBlock;
 import dev.emmanueltremblay.immersivefarming.block.IFBlocks;
 import dev.emmanueltremblay.immersivefarming.block.IndustrialComposterBlock;
 import dev.emmanueltremblay.immersivefarming.block.SprinklerBlock;
+import dev.emmanueltremblay.immersivefarming.block.entity.SprinklerBlockEntity;
 import dev.emmanueltremblay.immersivefarming.config.IFConfig;
 import dev.emmanueltremblay.immersivefarming.event.FarmingEvents;
 import dev.emmanueltremblay.immersivefarming.item.IFItems;
@@ -21,12 +22,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.player.BonemealEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.block.CropGrowEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 
 @GameTestHolder(ImmersiveFarming.MOD_ID)
@@ -59,6 +64,24 @@ public final class IFFarmingGameTests {
                 FarmingLogic.WATER_IRRIGATION, "high-pressure sprinkler edge irrigation");
         helper.assertValueEqual(FarmingLogic.irrigationAt(helper.getLevel(), helper.absolutePos(new BlockPos(21, 2, 8))),
                 FarmingLogic.NO_IRRIGATION, "high-pressure sprinkler outside radius");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY)
+    public static void sprinkler_fluid_handler_respects_tank_bounds(GameTestHelper helper) {
+        resetConfig();
+        BlockPos sprinkler = new BlockPos(4, 2, 4);
+        helper.setBlock(sprinkler, IFBlocks.SPRINKLER.get().defaultBlockState());
+
+        BlockEntity blockEntity = helper.getLevel().getBlockEntity(helper.absolutePos(sprinkler));
+        helper.assertTrue(blockEntity instanceof SprinklerBlockEntity, "sprinkler should create a block entity");
+        IFluidHandler handler = ((SprinklerBlockEntity) blockEntity).getFluidHandler(Direction.UP);
+
+        handler.fill(new FluidStack(Fluids.WATER, 250), IFluidHandler.FluidAction.EXECUTE);
+        helper.assertValueEqual(handler.getTanks(), 1, "sprinkler tank count");
+        helper.assertValueEqual(handler.getTankCapacity(1), 0, "invalid tank capacity");
+        helper.assertTrue(handler.getFluidInTank(1).isEmpty(), "invalid tank should be empty");
+        helper.assertTrue(!handler.isFluidValid(1, new FluidStack(Fluids.WATER, 1)), "invalid tank should reject fluids");
         helper.succeed();
     }
 

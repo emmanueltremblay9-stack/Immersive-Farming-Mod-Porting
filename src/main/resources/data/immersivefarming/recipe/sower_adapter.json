@@ -1,5 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "astikorcarts"
+        },
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "astikorcartsredux"
+        },
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "astikorredux"
+        }
+      ]
+    }
+  ],
   "category": "tools",
   "pattern": [
     " C ",

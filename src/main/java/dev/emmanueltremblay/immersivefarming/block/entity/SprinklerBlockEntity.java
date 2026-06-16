@@ -40,7 +40,7 @@ public class SprinklerBlockEntity extends BlockEntity {
         BlockState newState = state
                 .setValue(SprinklerBlock.ACTIVE, active)
                 .setValue(SprinklerBlock.USING_TREATED_WATER, active && sprinkler.treatedWater);
-        if (newState != state) {
+        if (!newState.equals(state)) {
             level.setBlock(pos, newState, 3);
         }
         sprinkler.setChanged();
@@ -70,8 +70,8 @@ public class SprinklerBlockEntity extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        fluidAmount = tag.getInt("fluidAmount");
-        treatedWater = tag.getBoolean("treatedWater");
+        fluidAmount = Math.min(CAPACITY, Math.max(0, tag.getInt("fluidAmount")));
+        treatedWater = fluidAmount > 0 && tag.getBoolean("treatedWater");
     }
 
     private boolean accepts(Fluid fluid) {
@@ -90,7 +90,7 @@ public class SprinklerBlockEntity extends BlockEntity {
 
         @Override
         public @NotNull FluidStack getFluidInTank(int tank) {
-            if (fluidAmount <= 0) {
+            if (tank != 0 || fluidAmount <= 0) {
                 return FluidStack.EMPTY;
             }
             return new FluidStack(storedFluid(), fluidAmount);
@@ -98,12 +98,12 @@ public class SprinklerBlockEntity extends BlockEntity {
 
         @Override
         public int getTankCapacity(int tank) {
-            return CAPACITY;
+            return tank == 0 ? CAPACITY : 0;
         }
 
         @Override
         public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-            return accepts(stack.getFluid());
+            return tank == 0 && accepts(stack.getFluid());
         }
 
         @Override
