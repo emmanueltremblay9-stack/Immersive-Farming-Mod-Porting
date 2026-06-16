@@ -21,6 +21,6 @@ public class DeadCropBlock extends BushBlock {
 
     @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.is(Blocks.FARMLAND) || state.is(IFBlocks.SOIL.get());
+        return state.is(Blocks.DIRT) || state.is(Blocks.FARMLAND) || state.is(IFBlocks.SOIL.get());
     }
 }

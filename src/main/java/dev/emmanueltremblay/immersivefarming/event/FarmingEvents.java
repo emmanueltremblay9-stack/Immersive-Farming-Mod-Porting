@@ -5,7 +5,9 @@ import dev.emmanueltremblay.immersivefarming.block.IFBlocks;
 import dev.emmanueltremblay.immersivefarming.config.IFConfig;
 import dev.emmanueltremblay.immersivefarming.util.IFTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -23,17 +25,19 @@ import net.neoforged.neoforge.event.level.block.CropGrowEvent;
 public final class FarmingEvents {
     @SubscribeEvent
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (!(event.getItemStack().getItem() instanceof HoeItem) || event.getHand() != event.getEntity().getUsedItemHand()) {
+        if (!(event.getItemStack().getItem() instanceof HoeItem)) {
             return;
         }
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
+        Item hoe = event.getItemStack().getItem();
+        EquipmentSlot slot = slotForHand(event.getHand());
 
         if (state.is(IFTags.Blocks.TILLABLE_BLOCK)) {
             if (!level.isClientSide()) {
-                level.setBlock(pos, IFBlocks.SOIL.get().defaultBlockState().setValue(FertileSoilBlock.TILL, hoeSpeed(event.getItemStack().getItem())), 3);
-                event.getItemStack().hurtAndBreak(1, event.getEntity(), event.getEntity().getEquipmentSlotForItem(event.getItemStack()));
+                level.setBlock(pos, IFBlocks.SOIL.get().defaultBlockState().setValue(FertileSoilBlock.TILL, hoeSpeed(hoe)), 3);
+                event.getItemStack().hurtAndBreak(1, event.getEntity(), slot);
             }
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -42,9 +46,9 @@ public final class FarmingEvents {
 
         if (state.getBlock() instanceof FertileSoilBlock && state.getValue(FertileSoilBlock.TILL) < FertileSoilBlock.TILL_MAX) {
             if (!level.isClientSide()) {
-                int nextTill = Math.min(FertileSoilBlock.TILL_MAX, state.getValue(FertileSoilBlock.TILL) + hoeSpeed(event.getItemStack().getItem()));
+                int nextTill = Math.min(FertileSoilBlock.TILL_MAX, state.getValue(FertileSoilBlock.TILL) + hoeSpeed(hoe));
                 level.setBlock(pos, state.setValue(FertileSoilBlock.TILL, nextTill), 3);
-                event.getItemStack().hurtAndBreak(1, event.getEntity(), event.getEntity().getEquipmentSlotForItem(event.getItemStack()));
+                event.getItemStack().hurtAndBreak(1, event.getEntity(), slot);
             }
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -78,6 +82,10 @@ public final class FarmingEvents {
         if (!(soil.getBlock() instanceof FertileSoilBlock)) {
             return;
         }
+        if (soil.getValue(FertileSoilBlock.TILL) < FertileSoilBlock.TILL_MAX) {
+            event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
+            return;
+        }
         if (soil.getValue(FertileSoilBlock.MOISTURE) <= 0) {
             event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
             return;
@@ -92,8 +100,13 @@ public final class FarmingEvents {
     public void onCropGrowPost(CropGrowEvent.Post event) {
         BlockState soil = event.getLevel().getBlockState(event.getPos().below());
         if (soil.getBlock() instanceof FertileSoilBlock && soil.getValue(FertileSoilBlock.FERTILITY) > 0) {
-            event.getLevel().setBlock(event.getPos().below(), soil.setValue(FertileSoilBlock.FERTILITY, 0), 2);
+            event.getLevel().setBlock(event.getPos().below(),
+                    soil.setValue(FertileSoilBlock.FERTILITY, soil.getValue(FertileSoilBlock.FERTILITY) - 1), 2);
         }
+    }
+
+    private static EquipmentSlot slotForHand(InteractionHand hand) {
+        return hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
     }
 
     private static int hoeSpeed(Item item) {

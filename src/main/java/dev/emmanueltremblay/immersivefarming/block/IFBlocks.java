@@ -40,7 +40,7 @@ public final class IFBlocks {
 
     public static final DeferredBlock<IndustrialComposterBlock> COMPOSTER = registerBlock(
             "composter",
-            () -> new IndustrialComposterBlock(metalNoOcclusion().randomTicks())
+            () -> new IndustrialComposterBlock(metalNoOcclusion())
     );
 
     public static final DeferredBlock<DeadCropBlock> DEAD_CROP = registerBlock(

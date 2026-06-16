@@ -12,19 +12,40 @@ public final class ComposterMultiblock {
     private ComposterMultiblock() {
     }
 
-    public static boolean tryForm(Level level, BlockPos origin) {
-        BlockPos min = origin;
-        for (BlockPos pos : positions(min)) {
-            if (!level.getBlockState(pos).is(IFBlocks.COMPOSTER.get())) {
-                return false;
-            }
+    public static boolean tryForm(Level level, BlockPos clickedPos) {
+        BlockPos origin = findOrigin(level, clickedPos);
+        if (origin == null) {
+            return false;
         }
-        for (BlockPos pos : positions(min)) {
+        for (BlockPos pos : positions(origin)) {
             boolean slave = !pos.equals(origin);
             BlockState state = level.getBlockState(pos)
                     .setValue(IndustrialComposterBlock.FORMED, true)
                     .setValue(IndustrialComposterBlock.SLAVE, slave);
             level.setBlock(pos, state, 3);
+        }
+        return true;
+    }
+
+    private static BlockPos findOrigin(Level level, BlockPos clickedPos) {
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                for (int z = 0; z < DEPTH; z++) {
+                    BlockPos origin = clickedPos.offset(-x, -y, -z);
+                    if (isComplete(level, origin)) {
+                        return origin;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean isComplete(Level level, BlockPos origin) {
+        for (BlockPos pos : positions(origin)) {
+            if (!level.getBlockState(pos).is(IFBlocks.COMPOSTER.get())) {
+                return false;
+            }
         }
         return true;
     }

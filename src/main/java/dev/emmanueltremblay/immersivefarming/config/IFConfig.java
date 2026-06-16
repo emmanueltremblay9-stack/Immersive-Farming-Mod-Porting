@@ -68,6 +68,9 @@ public final class IFConfig {
 
     @SubscribeEvent
     static void onConfigLoad(ModConfigEvent event) {
+        if (event.getConfig().getSpec() != SPEC) {
+            return;
+        }
         enableDisease = ENABLE_DISEASE.get();
         enableFarmlandTrampleProtection = ENABLE_FARMLAND_TRAMPLE_PROTECTION.get();
         disableVanillaBoneMealOnCrops = DISABLE_VANILLA_BONE_MEAL_ON_CROPS.get();

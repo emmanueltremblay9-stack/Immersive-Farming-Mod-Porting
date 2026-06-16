@@ -81,8 +81,7 @@ public class FertileSoilBlock extends FarmBlock {
         }
         if (diseased && random.nextDouble() < IFConfig.diseaseLethalityChance) {
             level.setBlock(pos.above(), IFBlocks.DEAD_CROP.get().defaultBlockState(), 3);
-            level.setBlock(pos, Blocks.DIRT.defaultBlockState(), 2);
-            return state;
+            return Blocks.DIRT.defaultBlockState();
         }
         if (diseased) {
             for (BlockPos neighbor : BlockPos.betweenClosed(pos.offset(-1, 0, -1), pos.offset(1, 0, 1))) {

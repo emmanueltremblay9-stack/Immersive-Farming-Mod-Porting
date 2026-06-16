@@ -61,4 +61,12 @@ public class IndustrialComposterBlock extends BaseEntityBlock {
                 : "message.immersivefarming.composter_incomplete"), true);
         return formed ? InteractionResult.CONSUME : InteractionResult.PASS;
     }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!level.isClientSide() && state.getValue(FORMED) && !state.is(newState.getBlock())) {
+            ComposterMultiblock.breakFormed(level, pos);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
 }

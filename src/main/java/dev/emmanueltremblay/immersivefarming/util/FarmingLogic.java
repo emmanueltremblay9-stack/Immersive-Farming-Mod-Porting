@@ -3,10 +3,12 @@ package dev.emmanueltremblay.immersivefarming.util;
 import dev.emmanueltremblay.immersivefarming.block.IFBlocks;
 import dev.emmanueltremblay.immersivefarming.block.SprinklerBlock;
 import dev.emmanueltremblay.immersivefarming.config.IFConfig;
+import dev.emmanueltremblay.immersivefarming.fluid.IFFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 
 public final class FarmingLogic {
     public static final int NO_IRRIGATION = 0;
@@ -22,7 +24,11 @@ public final class FarmingLogic {
             return fromSprinklers;
         }
         for (BlockPos waterPos : BlockPos.betweenClosed(pos.offset(-1, 0, -1), pos.offset(1, 1, 1))) {
-            if (level.getFluidState(waterPos).is(FluidTags.WATER)) {
+            FluidState fluid = level.getFluidState(waterPos);
+            if (fluid.is(IFFluids.TREATED_WATER.get()) || fluid.is(IFFluids.TREATED_WATER_FLOWING.get())) {
+                return TREATED_IRRIGATION;
+            }
+            if (fluid.is(FluidTags.WATER)) {
                 return WATER_IRRIGATION;
             }
         }

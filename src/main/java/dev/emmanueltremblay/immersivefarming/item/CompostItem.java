@@ -14,11 +14,13 @@ public class CompostItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         BlockState state = context.getLevel().getBlockState(context.getClickedPos());
-        if (!(state.getBlock() instanceof FertileSoilBlock) || state.getValue(FertileSoilBlock.FERTILITY) >= 1) {
+        if (!(state.getBlock() instanceof FertileSoilBlock)
+                || state.getValue(FertileSoilBlock.FERTILITY) >= FertileSoilBlock.FERTILITY_MAX) {
             return InteractionResult.PASS;
         }
         if (!context.getLevel().isClientSide()) {
-            context.getLevel().setBlock(context.getClickedPos(), state.setValue(FertileSoilBlock.FERTILITY, 1), 3);
+            context.getLevel().setBlock(context.getClickedPos(),
+                    state.setValue(FertileSoilBlock.FERTILITY, state.getValue(FertileSoilBlock.FERTILITY) + 1), 3);
             if (context.getPlayer() == null || !context.getPlayer().getAbilities().instabuild) {
                 context.getItemInHand().shrink(1);
             }
