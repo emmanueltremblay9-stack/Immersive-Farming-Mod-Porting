@@ -61,7 +61,7 @@ public class FertileSoilBlock extends FarmBlock {
             next = next.setValue(DISEASED, false);
         }
 
-        if (next != state) {
+        if (!next.equals(state)) {
             level.setBlock(pos, next, 2);
         }
     }

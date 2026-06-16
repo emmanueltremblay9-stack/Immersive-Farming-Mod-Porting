@@ -65,7 +65,7 @@ public class IndustrialComposterBlock extends BaseEntityBlock {
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!level.isClientSide() && state.getValue(FORMED) && !state.is(newState.getBlock())) {
-            ComposterMultiblock.breakFormed(level, pos);
+            ComposterMultiblock.breakFormed(level, pos, state);
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }

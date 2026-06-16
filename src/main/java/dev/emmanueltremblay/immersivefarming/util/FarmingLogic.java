@@ -20,19 +20,22 @@ public final class FarmingLogic {
 
     public static int irrigationAt(LevelReader level, BlockPos pos) {
         int fromSprinklers = sprinklerIrrigationAt(level, pos);
-        if (fromSprinklers > NO_IRRIGATION) {
-            return fromSprinklers;
-        }
+        int fromFluids = fluidIrrigationAt(level, pos);
+        return Math.max(fromSprinklers, fromFluids);
+    }
+
+    private static int fluidIrrigationAt(LevelReader level, BlockPos pos) {
+        boolean waterFound = false;
         for (BlockPos waterPos : BlockPos.betweenClosed(pos.offset(-1, 0, -1), pos.offset(1, 1, 1))) {
             FluidState fluid = level.getFluidState(waterPos);
             if (fluid.is(IFFluids.TREATED_WATER.get()) || fluid.is(IFFluids.TREATED_WATER_FLOWING.get())) {
                 return TREATED_IRRIGATION;
             }
             if (fluid.is(FluidTags.WATER)) {
-                return WATER_IRRIGATION;
+                waterFound = true;
             }
         }
-        return NO_IRRIGATION;
+        return waterFound ? WATER_IRRIGATION : NO_IRRIGATION;
     }
 
     private static int sprinklerIrrigationAt(LevelReader level, BlockPos pos) {

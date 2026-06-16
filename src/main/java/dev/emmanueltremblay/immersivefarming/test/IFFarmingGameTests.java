@@ -133,6 +133,35 @@ public final class IFFarmingGameTests {
     }
 
     @GameTest(template = EMPTY)
+    public static void treated_water_overrides_regular_sprinkler_irrigation(GameTestHelper helper) {
+        resetConfig();
+        BlockPos sprinkler = new BlockPos(8, 2, 8);
+        BlockPos soil = new BlockPos(10, 2, 8);
+        helper.setBlock(sprinkler, IFBlocks.SPRINKLER.get().defaultBlockState().setValue(SprinklerBlock.ACTIVE, true));
+        helper.setBlock(soil, diseasedSoil(true));
+        helper.setBlock(soil.above(), Blocks.WHEAT.defaultBlockState());
+        helper.setBlock(soil.east(), IFBlocks.TREATED_WATER.get().defaultBlockState());
+
+        helper.assertValueEqual(FarmingLogic.irrigationAt(helper.getLevel(), helper.absolutePos(soil)),
+                FarmingLogic.TREATED_IRRIGATION, "treated water should outrank regular sprinkler water");
+        helper.randomTick(soil);
+        helper.assertBlockProperty(soil, FertileSoilBlock.DISEASED, false);
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY)
+    public static void treated_water_overrides_nearby_water(GameTestHelper helper) {
+        resetConfig();
+        BlockPos soil = new BlockPos(4, 2, 4);
+        helper.setBlock(soil.offset(-1, 0, -1), Blocks.WATER.defaultBlockState());
+        helper.setBlock(soil.offset(1, 1, 1), IFBlocks.TREATED_WATER.get().defaultBlockState());
+
+        helper.assertValueEqual(FarmingLogic.irrigationAt(helper.getLevel(), helper.absolutePos(soil)),
+                FarmingLogic.TREATED_IRRIGATION, "treated water should outrank nearby water");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY)
     public static void lethal_disease_replaces_soil_after_hydration(GameTestHelper helper) {
         resetConfig();
         IFConfig.diseaseLethalityChance = 1.0D;
@@ -189,9 +218,7 @@ public final class IFFarmingGameTests {
         resetConfig();
         BlockPos origin = new BlockPos(2, 2, 2);
         BlockPos clickedSlave = origin.offset(1, 0, 1);
-        for (BlockPos pos : BlockPos.betweenClosed(origin, origin.offset(ComposterMultiblock.WIDTH - 1, ComposterMultiblock.HEIGHT - 1, ComposterMultiblock.DEPTH - 1))) {
-            helper.setBlock(pos, IFBlocks.COMPOSTER.get());
-        }
+        placeComposterStructure(helper, origin);
 
         helper.assertTrue(ComposterMultiblock.tryForm(helper.getLevel(), helper.absolutePos(clickedSlave)), "composter should form from any block in the structure");
         helper.assertBlockProperty(origin, IndustrialComposterBlock.FORMED, true);
@@ -199,6 +226,25 @@ public final class IFFarmingGameTests {
 
         helper.setBlock(clickedSlave, Blocks.AIR.defaultBlockState());
         helper.assertBlockProperty(origin, IndustrialComposterBlock.FORMED, false);
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY)
+    public static void composter_break_does_not_clear_adjacent_structure(GameTestHelper helper) {
+        resetConfig();
+        BlockPos firstOrigin = new BlockPos(2, 2, 2);
+        BlockPos secondOrigin = firstOrigin.offset(ComposterMultiblock.WIDTH, 0, 0);
+        BlockPos brokenSlave = firstOrigin.offset(1, 0, 1);
+        placeComposterStructure(helper, firstOrigin);
+        placeComposterStructure(helper, secondOrigin);
+
+        helper.assertTrue(ComposterMultiblock.tryForm(helper.getLevel(), helper.absolutePos(firstOrigin)), "first composter should form");
+        helper.assertTrue(ComposterMultiblock.tryForm(helper.getLevel(), helper.absolutePos(secondOrigin)), "second composter should form");
+
+        helper.setBlock(brokenSlave, Blocks.AIR.defaultBlockState());
+        helper.assertBlockProperty(firstOrigin, IndustrialComposterBlock.FORMED, false);
+        helper.assertBlockProperty(secondOrigin, IndustrialComposterBlock.FORMED, true);
+        helper.assertBlockProperty(secondOrigin.offset(1, 0, 1), IndustrialComposterBlock.FORMED, true);
         helper.succeed();
     }
 
@@ -274,5 +320,11 @@ public final class IFFarmingGameTests {
                 .setValue(FertileSoilBlock.MOISTURE, 7)
                 .setValue(FertileSoilBlock.TILL, FertileSoilBlock.TILL_MAX)
                 .setValue(FertileSoilBlock.DISEASED, diseased);
+    }
+
+    private static void placeComposterStructure(GameTestHelper helper, BlockPos origin) {
+        for (BlockPos pos : BlockPos.betweenClosed(origin, origin.offset(ComposterMultiblock.WIDTH - 1, ComposterMultiblock.HEIGHT - 1, ComposterMultiblock.DEPTH - 1))) {
+            helper.setBlock(pos, IFBlocks.COMPOSTER.get());
+        }
     }
 }

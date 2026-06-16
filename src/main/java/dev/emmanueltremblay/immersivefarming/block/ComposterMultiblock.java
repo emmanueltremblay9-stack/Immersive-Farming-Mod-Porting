@@ -50,13 +50,48 @@ public final class ComposterMultiblock {
         return true;
     }
 
-    public static void breakFormed(Level level, BlockPos origin) {
-        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-WIDTH, -HEIGHT, -DEPTH), origin.offset(WIDTH, HEIGHT, DEPTH))) {
+    public static void breakFormed(Level level, BlockPos brokenPos, BlockState brokenState) {
+        BlockPos origin = brokenState.getValue(IndustrialComposterBlock.SLAVE) ? findFormedOrigin(level, brokenPos) : brokenPos;
+        if (origin == null) {
+            return;
+        }
+        for (BlockPos pos : positions(origin)) {
             BlockState state = level.getBlockState(pos);
             if (state.is(IFBlocks.COMPOSTER.get()) && state.getValue(IndustrialComposterBlock.FORMED)) {
                 level.setBlock(pos, state.setValue(IndustrialComposterBlock.FORMED, false).setValue(IndustrialComposterBlock.SLAVE, false), 3);
             }
         }
+    }
+
+    private static BlockPos findFormedOrigin(Level level, BlockPos memberPos) {
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                for (int z = 0; z < DEPTH; z++) {
+                    BlockPos origin = memberPos.offset(-x, -y, -z);
+                    if (isFormedStructureExcept(level, origin, memberPos)) {
+                        return origin;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean isFormedStructureExcept(Level level, BlockPos origin, BlockPos missingPos) {
+        for (BlockPos pos : positions(origin)) {
+            if (pos.equals(missingPos)) {
+                continue;
+            }
+            BlockState state = level.getBlockState(pos);
+            if (!state.is(IFBlocks.COMPOSTER.get()) || !state.getValue(IndustrialComposterBlock.FORMED)) {
+                return false;
+            }
+            boolean expectedSlave = !pos.equals(origin);
+            if (state.getValue(IndustrialComposterBlock.SLAVE) != expectedSlave) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static Iterable<BlockPos> positions(BlockPos origin) {
