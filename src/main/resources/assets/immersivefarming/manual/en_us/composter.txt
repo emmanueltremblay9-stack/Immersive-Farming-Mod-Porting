@@ -1,0 +1,4 @@
+Industrial Composter
+Multiblock composting
+The industrial composter is the modernization fork's multiblock foundation for automated compost production. Forming and breaking the structure is validated by GameTests while the full Immersive Engineering energy integration continues to evolve.<np>
+Use compost output on prepared soil to improve crop growth according to the configured multiplier.

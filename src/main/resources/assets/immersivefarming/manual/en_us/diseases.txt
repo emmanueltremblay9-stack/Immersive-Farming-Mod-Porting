@@ -1,0 +1,4 @@
+Crop Diseases
+Propagation and treatment
+When disease is enabled, diseased crops can spread to nearby prepared soil and may eventually fail if left untreated.<np>
+Treated water irrigation cures disease before normal crop growth rules continue. This makes treated water useful for recovery lines and for protecting dense farms.

@@ -1,0 +1,4 @@
+Fertility
+Compost and crop growth
+Compost can be applied to prepared soil to improve crop growth for the next cycle. The boost is controlled by the compost growth multiplier config value.<np>
+Prepared soil keeps the farming rules in one place, including hydration, fertility, disease behavior, and optional vanilla bone meal restrictions.

@@ -1,7 +1,28 @@
 {
-  "immersivefarming:irrigation": "immersivefarming:manual/irrigation",
-  "immersivefarming:fertility": "immersivefarming:manual/fertility",
-  "immersivefarming:diseases": "immersivefarming:manual/diseases",
-  "immersivefarming:composter": "immersivefarming:manual/composter",
-  "immersivefarming:astikor_redux": "immersivefarming:manual/astikor_redux"
+  "autoload_priority": 0,
+  "immersivefarming:farming": {
+    "category_weight": 95,
+    "entry_list": [
+      {
+        "source": "immersivefarming:irrigation",
+        "weight": 0
+      },
+      {
+        "source": "immersivefarming:fertility",
+        "weight": 1
+      },
+      {
+        "source": "immersivefarming:diseases",
+        "weight": 2
+      },
+      {
+        "source": "immersivefarming:composter",
+        "weight": 3
+      },
+      {
+        "source": "immersivefarming:astikor_redux",
+        "weight": 4
+      }
+    ]
+  }
 }

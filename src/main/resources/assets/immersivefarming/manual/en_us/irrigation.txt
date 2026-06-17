@@ -1,0 +1,4 @@
+Irrigation
+Sprinklers and treated water
+Sprinklers hydrate prepared soil around their position when supplied with water. The normal sprinkler uses the configurable sprinkler radius, while the high-pressure sprinkler uses the high-pressure radius for larger farms.<np>
+Treated water counts as irrigation and can also cure disease on prepared soil. When both normal water and treated water are available, treated water takes priority for disease handling.

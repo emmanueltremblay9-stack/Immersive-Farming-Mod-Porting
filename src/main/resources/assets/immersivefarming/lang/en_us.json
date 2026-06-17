@@ -11,6 +11,7 @@
   "item.immersivefarming.plow": "Astikor Plow Adapter",
   "item.immersivefarming.sower": "Astikor Sower Adapter",
   "itemGroup.immersivefarming": "Immersive Farming",
+  "manual.immersivefarming:farming": "Immersive Farming",
   "tooltip.immersivefarming.astikor_placeholder": "Compatibility item for AstikorCarts Redux-style integrations.",
   "message.immersivefarming.composter_formed": "Industrial composter formed.",
   "message.immersivefarming.composter_incomplete": "Industrial composter structure is incomplete.",

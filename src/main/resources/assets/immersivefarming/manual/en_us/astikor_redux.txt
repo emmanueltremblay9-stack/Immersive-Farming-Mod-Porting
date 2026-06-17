@@ -1,0 +1,4 @@
+AstikorCarts Redux
+Compatibility without legacy cart code
+This fork does not copy the old AstikorCarts-derived cart implementation. Instead, it keeps compatibility items, tags, recipes, and integration hooks that can be enabled when AstikorCarts Redux is present.<np>
+The optional adapters are intended for plowing, sowing, and fertilizer behavior while leaving cart ownership with the modern AstikorCarts Redux project.
