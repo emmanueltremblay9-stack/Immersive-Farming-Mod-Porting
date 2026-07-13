@@ -4,6 +4,10 @@ This is an unofficial porting workspace for modernizing Etyl's Immersive Farming
 
 The fork preserves upstream attribution and MIT license text. It does not claim endorsement from Etyl, Immersive Engineering, BluSunrize, AstikorCarts, or AstikorCarts Redux authors.
 
+## Immersive Cooking Merge
+
+This project has been merged with [akkiserver-dev/Immersive-Cooking](https://github.com/akkiserver-dev/Immersive-Cooking). Its NeoForge 1.21.1 cooking systems, resources, and compatibility integrations are included directly in this project while preserving the upstream `immersivecooking:*` registry and resource IDs.
+
 ## Port Scope
 
 - NeoForge 1.21.1 project skeleton.
