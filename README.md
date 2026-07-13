@@ -32,7 +32,7 @@ Do not publish or upload artifacts automatically from this workspace.
 
 ## Porting Notes
 
-See [docs/PORTING_FIXES.md](docs/PORTING_FIXES.md) for the Engineer's Manual localization fix and the NeoForge 1.21.1 multiblock repair notes.
+See [docs/ENGINEERS_MANUAL_IMPLEMENTATION_REPORT.md](docs/ENGINEERS_MANUAL_IMPLEMENTATION_REPORT.md) for the Engineer's Manual implementation and validation notes.
 
 See [MERGE_REPORT_IMMERSIVE_COOKING.md](MERGE_REPORT_IMMERSIVE_COOKING.md), [MERGE_INVENTORY_IMMERSIVE_COOKING.md](MERGE_INVENTORY_IMMERSIVE_COOKING.md), and [MIGRATION_IMMERSIVE_COOKING.md](MIGRATION_IMMERSIVE_COOKING.md) for the Immersive Cooking & Farming merge details.
 
