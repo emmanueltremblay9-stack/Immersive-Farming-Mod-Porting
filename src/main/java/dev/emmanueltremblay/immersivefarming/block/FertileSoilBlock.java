@@ -10,8 +10,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.AttachedStemBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -100,7 +102,8 @@ public class FertileSoilBlock extends FarmBlock {
     }
 
     public static boolean isUnderCrop(BlockGetter level, BlockPos pos) {
-        return level.getBlockState(pos.above()).getBlock() instanceof CropBlock;
+        Block block = level.getBlockState(pos.above()).getBlock();
+        return block instanceof CropBlock || block instanceof StemBlock || block instanceof AttachedStemBlock;
     }
 
     @Override

@@ -1,0 +1,10 @@
+Compatibilité avec les mods alimentaires
+Adaptateurs de recettes optionnels
+
+<&juice_items>
+
+La compatibilité Immersive Cooking est chargée seulement lorsque le mod optionnel concerné est présent. Les recettes de cuisine Farmer's Delight peuvent devenir des recettes de Marmite, et une recette de fermentation de terre riche est incluse pour le Fermenteur alimentaire.
+
+Les recettes de cuisine, de rôtissoire et de poêle de Farm & Charm peuvent aussi être adaptées en recettes de Marmite. Vinery ajoute des flux de raisin et de jus, des recettes d'embouteillage, des recettes de pressoir et de nombreuses recettes de vin pour le Fermenteur alimentaire.
+
+Le jar conserve les identifiants de registre upstream immersivecooking pour les fluides, seaux, recettes, multiblocs et menus. Les data packs doivent donc cibler les ID immersivecooking pour le contenu de cuisine, même si le code est initialisé par le point d'entrée du mod Immersive Farming.

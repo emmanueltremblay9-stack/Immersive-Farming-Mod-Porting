@@ -1,0 +1,9 @@
+Automatisation par chariots
+Équipement natif d'AstikorCarts
+
+Immersive Farming n'enregistre plus d'adaptateurs de charrue ou de semoir en double. Ces objets temporaires ne contrôlaient aucun chariot et reproduisaient l'équipement déjà fourni par les mods de chariots compatibles.
+
+La recette de roue en bois traité reste disponible comme composant de fabrication.
+<&wheel>
+
+Utilisez la charrue et le semoir natifs d'AstikorCarts, d'AstikorCarts Redux ou du mod de chariots compatible installé dans le pack. Ce mod gère leur attelage, leur inventaire et leur travail dans les champs.

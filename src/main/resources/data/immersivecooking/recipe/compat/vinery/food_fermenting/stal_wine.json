@@ -1,0 +1,29 @@
+{
+  "type": "immersivecooking:food_fermenter",
+  "container": {
+    "id": "vinery:wine_bottle"
+  },
+  "energy": 9600,
+  "fluid": {
+    "amount": 250,
+    "tag": "c:red_jungle_grapejuice"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:cocoa_beans"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "id": "vinery:stal_wine"
+  },
+  "time": 4800,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vinery"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "loader": "neoforge:obj",
+  "model": "immersive_farming_mod_porting:models/dynamic/sprinkler_normal_top.obj",
+  "flip_v": true,
+  "automatic_culling": false,
+  "shade_quads": true
+}

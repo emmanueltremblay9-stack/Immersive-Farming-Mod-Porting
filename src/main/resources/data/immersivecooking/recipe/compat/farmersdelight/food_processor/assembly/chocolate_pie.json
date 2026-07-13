@@ -1,0 +1,37 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 1600,
+  "inputs": [
+    {
+      "basePredicate": {
+        "item": "minecraft:cocoa_beans"
+      },
+      "count": 3
+    },
+    {
+      "basePredicate": {
+        "tag": "c:drinks/milk"
+      },
+      "count": 3
+    },
+    {
+      "basePredicate": {
+        "item": "minecraft:sugar"
+      },
+      "count": 2
+    },
+    {
+      "item": "farmersdelight:pie_crust"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:chocolate_pie"
+  },
+  "time": 180,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

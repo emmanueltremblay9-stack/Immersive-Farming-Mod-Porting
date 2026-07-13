@@ -1,0 +1,6 @@
+{
+  "food_fermenter0": {
+    "type": "multiblock",
+    "name": "immersivecooking:multiblocks/food_fermenter"
+  }
+}

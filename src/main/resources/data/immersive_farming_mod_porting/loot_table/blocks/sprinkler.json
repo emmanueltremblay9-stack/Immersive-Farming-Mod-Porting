@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "immersive_farming_mod_porting:sprinkler"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "immersive_farming_mod_porting:sprinkler",
+          "properties": {
+            "slave": "false"
+          }
+        }
+      ]
+    }
+  ]
+}

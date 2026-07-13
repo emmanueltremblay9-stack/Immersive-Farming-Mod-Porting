@@ -1,0 +1,10 @@
+Food Mod Compatibility
+Optional recipe adapters
+
+<&juice_items>
+
+Immersive Cooking compatibility is loaded only when the relevant optional mod is present. Farmer's Delight cooking recipes can become Cookpot recipes, and a rich soil fermentation recipe is packaged for the Food Fermenter.
+
+Farm & Charm cooking, roaster, and stove recipes can also be adapted into Cookpot recipes. Vinery adds grape and juice flows, bottling recipes, squeezer recipes, and many Food Fermenter wine recipes.
+
+The jar preserves upstream immersivecooking registry IDs for fluids, buckets, recipes, multiblocks, and menus. This means data packs should target immersivecooking IDs for kitchen content even though the code is initialized by the Immersive Farming mod entrypoint.

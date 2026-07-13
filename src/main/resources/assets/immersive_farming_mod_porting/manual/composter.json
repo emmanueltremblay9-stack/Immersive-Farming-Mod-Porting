@@ -1,0 +1,14 @@
+{
+  "multiblock": {
+    "type": "multiblock",
+    "name": "immersive_farming_mod_porting:multiblocks/composter"
+  },
+  "compost_result": {
+    "type": "item_display",
+    "items": [
+      {
+        "id": "immersive_farming_mod_porting:compost"
+      }
+    ]
+  }
+}

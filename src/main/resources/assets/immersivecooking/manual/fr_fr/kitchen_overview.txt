@@ -1,0 +1,10 @@
+Vue d'ensemble de la cuisine industrielle
+Systèmes Immersive Cooking fusionnés
+
+<&kitchen_blocks>
+
+Le contenu Immersive Cooking fusionné conserve l'espace de noms upstream immersivecooking dans le jar Immersive Farming. Les multiblocs de cuisine enregistrés sont le Four-gril, la Marmite industrielle, le Fermenteur alimentaire industriel et le Transformateur alimentaire industriel.
+
+Les recettes de cuisine sont surtout pilotées par les données. La Marmite utilise les recettes immersivecooking:cookpot et des adaptateurs optionnels pour Farmer's Delight et Farm & Charm. Le Fermenteur alimentaire utilise les recettes immersivecooking:food_fermenter et des recettes de compatibilité incluses pour Vinery et Farmer's Delight. Le Transformateur alimentaire utilise des recettes immersivecooking:food_processor incluses et accepte d'autres recettes de data pack. Le Four-gril utilise les recettes de fumage vanilla.
+
+Les exemples du Transformateur alimentaire incluent le pain avec eau, la tarte a la citrouille, le ragout de champignons et un ensemble large de preparation, decoupe, tarte, glace et assemblage froid Farmer's Delight quand ce mod est charge. JEI expose la categorie de recette quand JEI est charge.

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "IPI",
+    "ICI",
+    "PPP"
+  ],
+  "key": {
+    "I": {
+      "tag": "c:plates/steel"
+    },
+    "C": {
+      "item": "immersiveengineering:component_steel"
+    },
+    "P": {
+      "item": "immersiveengineering:fluid_pipe"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "immersive_farming_mod_porting:sprinkler_extended"
+  }
+}

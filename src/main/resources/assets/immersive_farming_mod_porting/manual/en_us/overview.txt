@@ -1,0 +1,10 @@
+Field Systems Overview
+Soil, water, compost, and disease
+
+Immersive Farming Reforged extends normal crop work with engineered soil, irrigation, compost processing, and crop disease rules. The implemented loop is practical: prepare Soil, keep it watered, boost it with Compost, and use Treated Water when disease pressure matters.
+
+<&core_items>
+
+Soil stores till, moisture, fertility, and disease state. Sprinklers hydrate nearby crops from internal water tanks. The Industrial Composter turns organic inputs into Green Material or Brown Material, then combines those fluids with water to produce Compost.<np>
+
+This manual documents the current runtime content in the jar. Cart plows and sowers come from the compatible cart mod itself; Immersive Farming does not register duplicate placeholder items.

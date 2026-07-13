@@ -1,0 +1,19 @@
+{
+  "kitchen_blocks": {
+    "type": "item_display",
+    "items": [
+      {
+        "id": "immersivecooking:cookpot"
+      },
+      {
+        "id": "immersivecooking:food_fermenter"
+      },
+      {
+        "id": "immersivecooking:grill_oven"
+      },
+      {
+        "id": "immersivecooking:food_processor"
+      }
+    ]
+  }
+}

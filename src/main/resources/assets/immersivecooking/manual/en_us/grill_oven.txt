@@ -1,0 +1,9 @@
+Grill Oven
+Three-slot smoking
+<&grill_oven0>
+
+The Grill Oven is the simple cooking multiblock. It exposes item handling everywhere, has three cooking slots, and uses a fourth slot for smoking fuel.
+
+Each cooking slot accepts items with a vanilla smoking recipe. Fuel is consumed when work is available. The output replaces the input stack in the same slot when cooking completes.
+
+Because the Grill Oven delegates to vanilla smoking recipes, data packs and mods that add smoking recipes automatically expand its usable inputs. It does not use FE.

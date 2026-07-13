@@ -1,0 +1,10 @@
+Crop Diseases
+Containment and recovery
+
+<&disease_items>
+
+When disease is enabled, crop blocks on Soil can become diseased at random. Diseased Soil can spread to nearby crop Soil, and lethal disease can replace the crop above with a Dead Crop while the Soil falls back to dirt.
+
+The server config controls start chance, proximity spread chance, and lethality chance. The default values are intentionally low, but dense monoculture fields are still more exposed because adjacent crop tiles can spread disease.
+
+Treated Water is the recovery path. If Soil is irrigated by Treated Water, disease is cleared during random ticks. A treated sprinkler network therefore acts as both hydration and disease response.

@@ -1,28 +1,23 @@
 {
-  "autoload_priority": 0,
-  "immersivefarming:farming": {
-    "category_weight": 95,
+  "autoload_priority": 2,
+  "immersive_farming_mod_porting:farming_and_cooking": {
+    "category_weight": 100,
     "entry_list": [
-      {
-        "source": "immersivefarming:irrigation",
-        "weight": 0
-      },
-      {
-        "source": "immersivefarming:fertility",
-        "weight": 1
-      },
-      {
-        "source": "immersivefarming:diseases",
-        "weight": 2
-      },
-      {
-        "source": "immersivefarming:composter",
-        "weight": 3
-      },
-      {
-        "source": "immersivefarming:astikor_redux",
-        "weight": 4
-      }
+      "immersive_farming_mod_porting:overview",
+      "immersive_farming_mod_porting:quick_start",
+      "immersive_farming_mod_porting:fertility",
+      "immersive_farming_mod_porting:irrigation",
+      "immersive_farming_mod_porting:diseases",
+      "immersive_farming_mod_porting:composter",
+      "immersive_farming_mod_porting:recipe_index",
+      "immersive_farming_mod_porting:horsecarts",
+      "immersive_farming_mod_porting:configuration",
+      "immersivecooking:kitchen_overview",
+      "immersivecooking:cookpot",
+      "immersivecooking:food_fermenter",
+      "immersivecooking:grill_oven",
+      "immersivecooking:food_processor",
+      "immersivecooking:compatibility"
     ]
   }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 2400,
+  "inputs": [
+    {
+      "item": "minecraft:pumpkin"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:egg"
+    }
+  ],
+  "result": {
+    "id": "minecraft:pumpkin_pie"
+  },
+  "time": 200
+}

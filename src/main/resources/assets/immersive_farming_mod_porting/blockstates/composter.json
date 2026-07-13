@@ -1,0 +1,30 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "formed": "false"
+      },
+      "apply": {
+        "model": "immersive_farming_mod_porting:block/empty"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "slave": "false"
+      },
+      "apply": {
+        "model": "immersive_farming_mod_porting:block/composter_formed"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "slave": "true"
+      },
+      "apply": {
+        "model": "immersive_farming_mod_porting:block/empty"
+      }
+    }
+  ]
+}

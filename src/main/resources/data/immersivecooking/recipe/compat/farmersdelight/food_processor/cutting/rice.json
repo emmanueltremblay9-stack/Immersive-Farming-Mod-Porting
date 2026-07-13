@@ -1,0 +1,19 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 800,
+  "inputs": [
+    {
+      "item": "farmersdelight:rice_panicle"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:rice"
+  },
+  "time": 80,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

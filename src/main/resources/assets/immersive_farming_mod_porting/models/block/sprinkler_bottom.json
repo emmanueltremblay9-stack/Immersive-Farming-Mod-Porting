@@ -1,0 +1,5 @@
+{
+  "loader": "immersiveengineering:conf_sides",
+  "type": "side_vertical",
+  "base_name": "immersive_farming_mod_porting:block/sprinkler"
+}

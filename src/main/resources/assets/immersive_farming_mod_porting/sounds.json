@@ -1,0 +1,20 @@
+{
+    "entity.cart.attach": {
+        "sounds": [
+            "immersive_farming_mod_porting:entity/cart/attach"
+        ],
+        "subtitle": "subtitles.immersive_farming_mod_porting.cart.attached"
+    },
+    "entity.cart.detach": {
+        "sounds": [
+            "immersive_farming_mod_porting:entity/cart/detach"
+        ],
+        "subtitle": "subtitles.immersive_farming_mod_porting.cart.detached"
+    },
+    "entity.cart.place": {
+        "sounds": [
+            "immersive_farming_mod_porting:entity/cart/place"
+        ],
+        "subtitle": "subtitles.immersive_farming_mod_porting.cart.placed"
+    }
+}

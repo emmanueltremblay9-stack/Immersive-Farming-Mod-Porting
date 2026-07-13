@@ -1,0 +1,16 @@
+{
+  "juice_items": {
+    "type": "item_display",
+    "items": [
+      {
+        "id": "immersivecooking:apple_juice_bucket"
+      },
+      {
+        "id": "immersivecooking:red_grapejuice_bucket"
+      },
+      {
+        "id": "immersivecooking:white_grapejuice_bucket"
+      }
+    ]
+  }
+}

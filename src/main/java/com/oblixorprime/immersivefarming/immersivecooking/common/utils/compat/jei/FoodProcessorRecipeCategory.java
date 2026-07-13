@@ -1,0 +1,58 @@
+package com.oblixorprime.immersivefarming.immersivecooking.common.utils.compat.jei;
+
+import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.util.Utils;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
+import com.oblixorprime.immersivefarming.immersivecooking.ImmersiveCooking;
+import com.oblixorprime.immersivefarming.immersivecooking.common.ICContent;
+import com.oblixorprime.immersivefarming.immersivecooking.common.crafting.FoodProcessorRecipe;
+import com.oblixorprime.immersivefarming.immersivecooking.common.utils.Resource;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class FoodProcessorRecipeCategory extends ICRecipeCategory<FoodProcessorRecipe> {
+    public FoodProcessorRecipeCategory(IGuiHelper helper) {
+        super(helper, ICJEIRecipeTypes.FOOD_PROCESSOR, "block." + ImmersiveCooking.MODID + ".food_processor");
+        ResourceLocation background = Resource.mod("textures/gui/food_processor.png");
+        setBackground(helper.createDrawable(background, 6, 6, 150, 68));
+        setIcon(ICContent.Multiblock.FOOD_PROCESSOR.iconStack());
+    }
+
+    @Override
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull FoodProcessorRecipe recipe, @NotNull IFocusGroup focuses) {
+        if (recipe.fluidInput != null) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 8, 14)
+                    .setFluidRenderer(12000, false, 16, 47)
+                    .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.fluidInput.getFluids()));
+        }
+
+        for (int i = 0; i < recipe.inputs.size(); i++) {
+            if (i >= 8) {
+                break;
+            }
+            int x = 56 + (i % 4) * 18;
+            int y = 20 + (i / 4) * 18;
+            builder.addSlot(RecipeIngredientRole.INPUT, x, y)
+                    .addItemStacks(Arrays.asList(recipe.inputs.get(i).getMatchingStacks()));
+        }
+
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 127, 48)
+                .addItemStack(recipe.result);
+    }
+
+    @Override
+    public void draw(FoodProcessorRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        String time = I18n.get("desc.immersiveengineering.info.seconds", Utils.formatDouble(recipe.getTotalProcessTime() / 20f, "#.##"));
+        graphics.drawString(ClientUtils.font(), time, 1, 1, 0xFFFFFF, false);
+    }
+}

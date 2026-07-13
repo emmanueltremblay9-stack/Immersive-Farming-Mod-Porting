@@ -1,0 +1,31 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 1200,
+  "inputs": [
+    {
+      "basePredicate": {
+        "item": "minecraft:melon_slice"
+      },
+      "count": 4
+    },
+    {
+      "basePredicate": {
+        "item": "minecraft:ice"
+      },
+      "count": 2
+    },
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:melon_popsicle"
+  },
+  "time": 120,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

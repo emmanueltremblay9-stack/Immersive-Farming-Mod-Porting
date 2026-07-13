@@ -1,0 +1,23 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 1600,
+  "fluid": {
+    "amount": 250,
+    "tag": "minecraft:water"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    }
+  ],
+  "result": {
+    "id": "minecraft:bread"
+  },
+  "time": 160
+}

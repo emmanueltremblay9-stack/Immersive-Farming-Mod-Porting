@@ -1,0 +1,13 @@
+{
+  "disease_items": {
+    "type": "item_display",
+    "items": [
+      {
+        "id": "immersive_farming_mod_porting:dead_crop"
+      },
+      {
+        "id": "immersive_farming_mod_porting:treated_water_bucket"
+      }
+    ]
+  }
+}

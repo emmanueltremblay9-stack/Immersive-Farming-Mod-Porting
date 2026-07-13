@@ -17,6 +17,19 @@ base {
     archivesName = mod_id
 }
 
+def configuredBuildDir = providers.environmentVariable('CODEX_GRADLE_BUILD_DIR')
+if (configuredBuildDir.present) {
+    layout.buildDirectory = file(configuredBuildDir.get())
+}
+else {
+    def normalizedProjectPath = projectDir.absolutePath.replace('\\', '/').toLowerCase(Locale.ROOT)
+    if (normalizedProjectPath.contains('/onedrive/')) {
+        def localAppData = System.getenv('LOCALAPPDATA') ?: new File(System.getProperty('user.home'), 'AppData/Local').absolutePath
+        def safeProjectName = rootProject.name.toLowerCase(Locale.ROOT).replaceAll('[^a-z0-9._-]+', '-')
+        layout.buildDirectory = file("${localAppData}/Codex/gradle-builds/${safeProjectName}")
+    }
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
@@ -25,6 +38,13 @@ repositories {
     maven { url = 'https://maven.neoforged.net/releases' }
     maven { url = 'https://maven.blamejared.com/' }
     maven { url = 'https://maven.saps.dev/releases' }
+    maven {
+        name = 'CurseMaven'
+        url = 'https://www.cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
 }
 
 runs {
@@ -62,6 +82,13 @@ configurations {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+    compileOnly "blusunrize.immersiveengineering:ImmersiveEngineering:1.21.1-12.4.2-194"
+    compileOnly "malte0811:DualCodecs:0.1.2"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:19.27.0.340"
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:19.27.0.340"
+    compileOnly "curse.maven:farmers-delight-398521:7596366"
+    compileOnly "curse.maven:architectury-api-419699:5786327"
+    compileOnly "curse.maven:lets-do-farm-charm-1038103:7959521"
     localRuntime "blusunrize.immersiveengineering:ImmersiveEngineering:1.21.1-12.4.2-194"
 }
 
@@ -77,7 +104,10 @@ tasks.withType(ProcessResources).configureEach {
             mod_license            : mod_license,
             mod_version            : mod_version,
             mod_authors            : mod_authors,
-            mod_description        : mod_description
+            mod_description        : mod_description,
+            farmersdelight_version_range: farmersdelight_version_range,
+            immersiveengineering_version_range: immersiveengineering_version_range,
+            optional_compat_version_range: optional_compat_version_range
     ]
     inputs.properties replaceProperties
 
@@ -94,6 +124,11 @@ tasks.register('scanAssets') {
         def generatedRoot = file('src/generated/resources')
         def hits = []
         [resourceRoot, generatedRoot].findAll { it.exists() }.each { root ->
+            fileTree(root).each { resource ->
+                if (resource.name.toLowerCase(Locale.ROOT).contains('sprinker')) {
+                    hits << "${resource}: misspelled sprinkler resource name"
+                }
+            }
             fileTree(root).matching { include '**/*.json' }.each { json ->
                 def text = json.getText('UTF-8')
                 if (text.contains('missingno') || text.contains('missing_texture') || text.contains('minecraft:missing')) {
@@ -107,8 +142,1403 @@ tasks.register('scanAssets') {
     }
 }
 
+tasks.register('scanNeoForgeObjModelLoaders') {
+    group = 'verification'
+    description = 'Scans model JSON files for legacy Forge OBJ loader ids.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def hits = []
+
+        roots.each { root ->
+            fileTree(root).matching { include 'assets/**/*.json' }.each { json ->
+                def text = json.getText('UTF-8')
+                if (text.contains('"loader": "forge:obj"')) {
+                    hits << json
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Legacy Forge OBJ model loaders found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanImmersiveCookingClientResources') {
+    group = 'verification'
+    description = 'Checks imported Immersive Cooking fluid blockstates and client model registrations.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def hits = []
+        def slurper = new groovy.json.JsonSlurper()
+
+        def contentFile = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/ICContent.java')
+        if (contentFile.exists()) {
+            def fluidNames = [] as Set
+            (contentFile.getText('UTF-8') =~ /FluidEntry\.make\("([^"]+)"/).each { match ->
+                fluidNames << match[1]
+            }
+
+            fluidNames.sort().each { name ->
+                def blockstatePath = "assets/immersivecooking/blockstates/${name}_fluid_block.json"
+                def blockstateFile = roots.collect { root -> file("${root}/${blockstatePath}") }.find { it.exists() }
+                if (blockstateFile == null) {
+                    hits << "Missing fluid blockstate: ${blockstatePath}"
+                }
+                else {
+                    def blockstate = slurper.parse(blockstateFile)
+                    def variants = blockstate.variants
+                    if (!(variants instanceof Map)) {
+                        hits << "${blockstateFile}: missing variants object"
+                    }
+                    else {
+                        (0..15).each { level ->
+                            def key = "level=${level}"
+                            def variant = variants[key]
+                            if (!(variant instanceof Map)) {
+                                hits << "${blockstateFile}: missing variant ${key}"
+                            }
+                            else if (!(variant.model instanceof String)) {
+                                hits << "${blockstateFile}: variant ${key} has no model"
+                            }
+                            else {
+                                def parts = variant.model.split(':', 2)
+                                def namespace = parts.length == 2 ? parts[0] : 'minecraft'
+                                def path = parts.length == 2 ? parts[1] : parts[0]
+                                def modelPath = "assets/${namespace}/models/${path}.json"
+                                if (!roots.any { root -> file("${root}/${modelPath}").exists() }) {
+                                    hits << "${blockstateFile}: variant ${key} references missing model ${modelPath}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        def clientSetupFile = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/client/ClientSetup.java')
+        if (clientSetupFile.exists()) {
+            def text = clientSetupFile.getText('UTF-8')
+            (text =~ /ModelResourceLocation\.standalone\(Resource\.mod\("block\/multiblock\/[^"]+\.obj"\)\)/).each { match ->
+                hits << "${clientSetupFile}: raw OBJ registered as standalone baked model: ${match[0]}"
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Immersive Cooking client resource issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanFarmingFluidClientTextures') {
+    group = 'verification'
+    description = 'Checks farming custom fluid types expose non-null client fluid sprite locations.'
+    doLast {
+        def fluidFile = file('src/main/java/dev/emmanueltremblay/immersivefarming/fluid/IFFluids.java')
+        def hits = []
+
+        if (!fluidFile.exists()) {
+            hits << "Missing farming fluid registration file: ${fluidFile}"
+        }
+        else {
+            def text = fluidFile.getText('UTF-8')
+            [
+                    'IClientFluidTypeExtensions',
+                    'initializeClient',
+                    'getStillTexture()',
+                    'getFlowingTexture()',
+                    'block/water_still',
+                    'block/water_flow'
+            ].each { required ->
+                if (!text.contains(required)) {
+                    hits << "${fluidFile}: missing client fluid texture marker ${required}"
+                }
+            }
+
+            (text =~ /FLUID_TYPES\.register\(\s*"[^"]+"\s*,\s*\(\)\s*->\s*new\s+FluidType\s*\(/).each { match ->
+                hits << "${fluidFile}: direct FluidType registration leaves client sprites nullable: ${match[0]}"
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Farming fluid client texture issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanMultiblockTemplateResources') {
+    group = 'verification'
+    description = 'Checks IE multiblock templates use the 1.21.1 singular data/*/structure path.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def hits = []
+
+        roots.each { root ->
+            fileTree(root).matching { include 'data/*/structures/multiblocks/*.nbt' }.each { template ->
+                hits << "${template}: use singular data/<namespace>/structure/multiblocks, not structures/multiblocks"
+            }
+        }
+
+        def expectedTemplates = [:].withDefault { [] as Set }
+        def cookingSources = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking')
+        if (cookingSources.exists()) {
+            fileTree(cookingSources).matching { include '**/*.java' }.each { javaFile ->
+                (javaFile.getText('UTF-8') =~ /Resource\.mod\("multiblocks\/([^"]+)"\)/).each { match ->
+                    expectedTemplates['immersivecooking'] << "multiblocks/${match[1]}"
+                }
+            }
+        }
+
+        def farmingSources = file('src/main/java/dev/emmanueltremblay/immersivefarming')
+        if (farmingSources.exists()) {
+            fileTree(farmingSources).matching { include '**/*.java' }.each { javaFile ->
+                (javaFile.getText('UTF-8') =~ /ImmersiveFarming\.id\("multiblocks\/([^"]+)"\)/).each { match ->
+                    expectedTemplates[mod_id] << "multiblocks/${match[1]}"
+                }
+            }
+        }
+
+        expectedTemplates.each { namespace, paths ->
+            paths.sort().each { path ->
+                def singularPath = "data/${namespace}/structure/${path}.nbt"
+                def pluralPath = "data/${namespace}/structures/${path}.nbt"
+                if (!roots.any { root -> file("${root}/${singularPath}").exists() }) {
+                    hits << "Missing IE multiblock template: ${singularPath}"
+                }
+                if (roots.any { root -> file("${root}/${pluralPath}").exists() }) {
+                    hits << "Wrong-path IE multiblock template still present: ${pluralPath}"
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("IE multiblock template resource issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanDataPackDirectoryNames') {
+    group = 'verification'
+    description = 'Checks 1.21.1 datapack resources do not use legacy plural directory names.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def legacyMappings = [
+                recipes     : 'recipe',
+                loot_tables : 'loot_table',
+                structures  : 'structure',
+                advancements: 'advancement'
+        ]
+        def hits = []
+
+        roots.each { root ->
+            def dataRoot = file("${root}/data")
+            if (!dataRoot.exists()) {
+                return
+            }
+            dataRoot.eachDir { namespaceDir ->
+                legacyMappings.each { legacyName, replacementName ->
+                    def legacyDir = new File(namespaceDir, legacyName)
+                    if (legacyDir.exists()) {
+                        hits << "${legacyDir}: use data/${namespaceDir.name}/${replacementName}/... for Minecraft 1.21.1"
+                    }
+                }
+
+                def tagsDir = new File(namespaceDir, 'tags')
+                if (tagsDir.exists()) {
+                    [
+                            blocks      : 'block',
+                            items       : 'item',
+                            fluids      : 'fluid',
+                            entity_types: 'entity_type',
+                            game_events : 'game_event'
+                    ].each { legacyName, replacementName ->
+                        def legacyTagDir = new File(tagsDir, legacyName)
+                        if (legacyTagDir.exists()) {
+                            hits << "${legacyTagDir}: use data/${namespaceDir.name}/tags/${replacementName}/... for Minecraft 1.21.1"
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Legacy datapack directory names found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanCommonTagNamespaces') {
+    group = 'verification'
+    description = 'Checks migrated 1.21.1 datapack JSONs do not use legacy forge common tags.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def hits = []
+
+        roots.each { root ->
+            def forgeTagsDir = file("${root}/data/forge/tags")
+            if (forgeTagsDir.exists()) {
+                hits << "${forgeTagsDir}: use the c namespace for common tags in NeoForge 1.21.1"
+            }
+            fileTree(root).matching {
+                include 'data/**/*.json'
+            }.each { json ->
+                def text = json.getText('UTF-8')
+                if (text.contains('"tag": "forge:')) {
+                    hits << "${json}: use c:* common tag references instead of forge:*"
+                }
+            }
+        }
+
+        def icTagsFile = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/ICTags.java')
+        if (icTagsFile.exists()) {
+            def text = icTagsFile.getText('UTF-8')
+            def fluidSection = text.substring(text.indexOf('public static class Fluids'))
+            if (fluidSection.contains('create(forge(')) {
+                hits << "${icTagsFile}: fluid common tags must use c:* in NeoForge 1.21.1, not forge:*"
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Legacy Forge common tag references found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanOptionalCompatibilityTagEntries') {
+    group = 'verification'
+    description = 'Checks optional cross-mod tag entries are marked required=false.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def alwaysAvailableNamespaces = [
+                'minecraft',
+                'immersive_farming_mod_porting',
+                'immersivecooking',
+                'immersiveengineering',
+                'neoforge',
+                'c'
+        ] as Set
+        def slurper = new groovy.json.JsonSlurper()
+        def hits = []
+
+        roots.each { root ->
+            fileTree(root).matching { include 'data/*/tags/**/*.json' }.each { tagFile ->
+                def json = slurper.parse(tagFile)
+                if (!(json instanceof Map) || !(json['values'] instanceof List)) {
+                    return
+                }
+                json['values'].eachWithIndex { entry, index ->
+                    def id = null
+                    def required = true
+                    if (entry instanceof String) {
+                        id = entry
+                    }
+                    else if (entry instanceof Map && entry['id'] instanceof String) {
+                        id = entry['id']
+                        if (entry['required'] instanceof Boolean) {
+                            required = entry['required']
+                        }
+                    }
+                    if (!(id instanceof String)) {
+                        return
+                    }
+
+                    def normalizedId = id.startsWith('#') ? id.substring(1) : id
+                    def match = normalizedId =~ /^([a-z0-9_.-]+):[a-z0-9_.\/-]+$/
+                    if (!match.matches()) {
+                        return
+                    }
+                    def namespace = match.group(1)
+                    if (!alwaysAvailableNamespaces.contains(namespace) && required != false) {
+                        hits << "${tagFile}: values[${index}] ${id} references optional namespace ${namespace} but is not required=false"
+                    }
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Optional compatibility tag entries are required:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanDependencyVersionRanges') {
+    group = 'verification'
+    description = 'Checks dependency metadata for required runtime dependencies and dependency-specific version ranges.'
+    doLast {
+        def metadataFile = file('src/main/resources/META-INF/neoforge.mods.toml')
+        def text = metadataFile.getText('UTF-8')
+        def hits = []
+        def minecraftVersionRangeLiterals = [
+                "[${minecraft_version},)",
+                "[${minecraft_version},]",
+                minecraft_version_range
+        ] as Set
+        def dependencyBlocks = text.split(/\[\[dependencies\.[^\]]+\]\]/).drop(1)
+
+        dependencyBlocks.each { block ->
+            def modIdMatch = block =~ /modId\s*=\s*"([^"]+)"/
+            def typeMatch = block =~ /type\s*=\s*"([^"]+)"/
+            def versionRangeMatch = block =~ /versionRange\s*=\s*"([^"]+)"/
+            if (!modIdMatch.find() || !versionRangeMatch.find()) {
+                return
+            }
+
+            def dependencyModId = modIdMatch.group(1)
+            def dependencyType = typeMatch.find() ? typeMatch.group(1) : ''
+            def versionRange = versionRangeMatch.group(1)
+            def resolvedVersionRange = versionRange
+            def placeholderMatch = versionRange =~ /^\$\{([^}]+)\}$/
+            if (placeholderMatch.matches()) {
+                def propertyValue = findProperty(placeholderMatch.group(1))
+                if (propertyValue != null) {
+                    resolvedVersionRange = propertyValue.toString()
+                }
+            }
+
+            if (dependencyModId == 'farmersdelight' && resolvedVersionRange == "[${minecraft_version},)") {
+                hits << "${dependencyModId}: ${versionRange}"
+            }
+            if (dependencyModId == 'immersiveengineering' && dependencyType != 'required') {
+                hits << "${dependencyModId}: dependency type must be required because merged runtime code and resources link IE APIs directly"
+            }
+            if (dependencyType == 'optional' && minecraftVersionRangeLiterals.contains(resolvedVersionRange)) {
+                hits << "${dependencyModId}: optional dependency range ${versionRange} resolves to ${resolvedVersionRange}, which uses the Minecraft version instead of the dependency mod version"
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Dependency metadata is inconsistent:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanRecipeCompatibilityConditions') {
+    group = 'verification'
+    description = 'Checks optional compat recipes are gated by the mods they reference.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def alwaysAvailableNamespaces = [
+                'minecraft',
+                'immersive_farming_mod_porting',
+                'immersivecooking',
+                'immersiveengineering',
+                'neoforge',
+                'forge',
+                'c'
+        ] as Set
+        def slurper = new groovy.json.JsonSlurper()
+        def hits = []
+        def collectModLoaded
+        collectModLoaded = { node ->
+            if (node instanceof Map) {
+                def found = [] as Set
+                if (node.type == 'neoforge:mod_loaded' && node.modid instanceof String) {
+                    found << node.modid
+                }
+                node.values().each { value ->
+                    found.addAll(collectModLoaded(value))
+                }
+                return found
+            }
+            if (node instanceof List) {
+                def found = [] as Set
+                node.each { value ->
+                    found.addAll(collectModLoaded(value))
+                }
+                return found
+            }
+            return [] as Set
+        }
+
+        roots.each { root ->
+            fileTree(root).matching { include 'data/*/recipe/**/*.json' }.each { recipe ->
+                def text = recipe.getText('UTF-8')
+                def json = slurper.parse(recipe)
+                if (json.containsKey('conditions')) {
+                    hits << "${recipe}: use neoforge:conditions, not legacy conditions"
+                }
+                def conditions = json['neoforge:conditions'] instanceof List ? json['neoforge:conditions'] : []
+                def modLoadedConditions = collectModLoaded(conditions)
+                def referencedNamespaces = [] as Set
+                (text =~ '"([a-z0-9_.-]+):[a-z0-9_./-]+"').each { match ->
+                    referencedNamespaces << match[1]
+                }
+                referencedNamespaces.removeAll(alwaysAvailableNamespaces)
+
+                referencedNamespaces.sort().each { namespace ->
+                    if (!modLoadedConditions.contains(namespace)) {
+                        hits << "${recipe}: references ${namespace}:* but is not gated by neoforge:mod_loaded ${namespace}"
+                    }
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Recipe compatibility condition issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanFarmAndCharmNamespaceReferences') {
+    group = 'verification'
+    description = 'Checks Farm & Charm compat recipe providers use the runtime mod id namespace.'
+    doLast {
+        def providerRoot = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/crafting/providers')
+        def hits = []
+
+        if (providerRoot.exists()) {
+            fileTree(providerRoot).matching { include 'FC*.java' }.each { javaFile ->
+                def text = javaFile.getText('UTF-8')
+                if (text.contains('"farmcharm"')) {
+                    hits << "${javaFile}: use farm_and_charm, not farmcharm"
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Farm & Charm namespace references are inconsistent:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanRecipeSchemaCompatibility') {
+    group = 'verification'
+    description = 'Checks imported 1.21.1 recipe JSONs use current IE/NeoForge field names.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def slurper = new groovy.json.JsonSlurper()
+        def hits = []
+
+        roots.each { root ->
+            fileTree(root).matching { include 'data/*/recipe/**/*.json' }.each { recipe ->
+                def json = slurper.parse(recipe)
+                def recipeType = json.type
+                if (!(recipeType instanceof String) || !recipeType.startsWith('immersiveengineering:')) {
+                    return
+                }
+
+                if (json.result instanceof Map && json.result.item instanceof String) {
+                    hits << "${recipe}: IE result item stack uses item; use id"
+                }
+                if (json.results instanceof List) {
+                    json.results.eachWithIndex { result, index ->
+                        if (result instanceof Map && result.item instanceof String) {
+                            hits << "${recipe}: IE results[${index}] uses item; use id"
+                        }
+                        if (result instanceof Map && result.output instanceof Map && result.output.item instanceof String) {
+                            hits << "${recipe}: IE results[${index}].output uses item; use id"
+                        }
+                    }
+                }
+                if (json.secondaries instanceof List) {
+                    json.secondaries.eachWithIndex { secondary, index ->
+                        if (secondary instanceof Map && secondary.output instanceof Map && secondary.output.item instanceof String) {
+                            hits << "${recipe}: IE secondaries[${index}].output uses item; use id"
+                        }
+                    }
+                }
+                if (json.fluid instanceof Map && json.fluid.fluid instanceof String) {
+                    hits << "${recipe}: IE fluid output uses fluid; use id"
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Recipe schema compatibility issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanRecipesForInvalidOutputs') {
+    group = 'verification'
+    description = 'Scans recipe JSON files for outputs that point at internal non-item blocks.'
+    doLast {
+        def internalNonItemIds = ['immersive_farming_mod_porting:composter'] as Set
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def hits = []
+        def slurper = new groovy.json.JsonSlurper()
+
+        roots.each { root ->
+            fileTree(root).matching {
+                include 'data/*/recipe/**/*.json'
+                include 'data/*/recipes/**/*.json'
+            }.each { recipe ->
+                def json = slurper.parse(recipe)
+                def result = json.result
+                def resultIds = []
+
+                if (result instanceof Map) {
+                    ['id', 'item'].each { key ->
+                        if (result[key] instanceof String) {
+                            resultIds << result[key]
+                        }
+                    }
+                }
+                else if (result instanceof String) {
+                    resultIds << result
+                }
+
+                resultIds.findAll { internalNonItemIds.contains(it) }.each { id ->
+                    hits << "${recipe}: result ${id}"
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Recipes output internal non-item blocks:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanManualReferences') {
+    group = 'verification'
+    description = 'Scans Immersive Engineering manual autoload files for missing manual entries and text resources.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def hits = []
+        def slurper = new groovy.json.JsonSlurper()
+
+        def manualPaths = { String reference ->
+            def parts = reference.split(':', 2)
+            def namespace = parts.length == 2 ? parts[0] : mod_id
+            def path = parts.length == 2 ? parts[1] : parts[0]
+            if (!path.startsWith('manual/')) {
+                path = "manual/${path}"
+            }
+            def manualPath = path.substring('manual/'.length())
+            [
+                    json: "assets/${namespace}/${path}.json",
+                    texts: [
+                            en_us: "assets/${namespace}/manual/en_us/${manualPath}.txt",
+                            fr_fr: "assets/${namespace}/manual/fr_fr/${manualPath}.txt"
+                    ]
+            ]
+        }
+
+        def findResource = { String relativePath ->
+            roots.collect { root -> file("${root}/${relativePath}") }.find { it.exists() }
+        }
+
+        def addReference = { references, value ->
+            if (value instanceof String) {
+                references << value
+            }
+        }
+
+        roots.each { root ->
+            [
+                    file("${root}/assets/immersiveengineering/manual/autoload.json"),
+                    file("${root}/data/immersiveengineering/manual/autoload.json")
+            ].findAll { it.exists() }.each { autoload ->
+                def json = slurper.parse(autoload)
+                def references = []
+                if (json instanceof Map) {
+                    json.each { key, value ->
+                        if (key != 'autoload_priority' && key != 'category_weight') {
+                            addReference(references, value)
+                            if (value instanceof Map) {
+                                addReference(references, value.source)
+                                if (value.entry_list instanceof Collection) {
+                                    value.entry_list.each { entry -> addReference(references, entry) }
+                                }
+                            }
+                        }
+                    }
+                }
+                references.unique().each { reference ->
+                    def paths = manualPaths(reference)
+                    def jsonFile = findResource(paths.json)
+                    def textFiles = paths.texts.collectEntries { locale, relativePath ->
+                        [(locale): findResource(relativePath)]
+                    }
+                    if (jsonFile == null) {
+                        hits << "${autoload}: ${reference} missing ${paths.json}"
+                    }
+                    textFiles.each { locale, textFile ->
+                        if (textFile == null) {
+                            hits << "${autoload}: ${reference} missing ${paths.texts[locale]}"
+                        }
+                    }
+                    if (jsonFile != null && textFiles.values().every { it != null }) {
+                        def manualJson = slurper.parse(jsonFile)
+                        if (!(manualJson instanceof Map)) {
+                            hits << "${jsonFile}: manual JSON must be an object"
+                        }
+                        else {
+                            textFiles.each { locale, textFile ->
+                                def text = textFile.getText('UTF-8')
+                                (text =~ /<&([^>]+)>/).each { match ->
+                                    def elementId = match[1]
+                                    if (!manualJson.containsKey(elementId)) {
+                                        hits << "${textFile}: ${reference} references <&${elementId}> but ${paths.json} does not define it"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Manual autoload entries point at invalid or missing manual resources:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanPackagedImportedClasses') {
+    group = 'verification'
+    description = 'Verifies documented Immersive Cooking classes are packaged intentionally and no dependency jars are bundled.'
+    dependsOn tasks.named('jar')
+    doLast {
+        def jarFile = tasks.named('jar').get().archiveFile.get().asFile
+        def entries = []
+        def zip = new java.util.zip.ZipFile(jarFile)
+        try {
+            zip.entries().each { entry ->
+                if (!entry.directory) {
+                    entries << entry.name
+                }
+            }
+        }
+        finally {
+            zip.close()
+        }
+
+        def nestedJars = entries.findAll { it.endsWith('.jar') }
+        if (!nestedJars.isEmpty()) {
+            throw new GradleException("Unexpected bundled dependency jars in ${jarFile}:\n" + nestedJars.join('\n'))
+        }
+
+        def legacyPackageClasses = entries.findAll {
+            it.startsWith('uk/akkiserver/immersivecooking/') && it.endsWith('.class')
+        }
+        if (!legacyPackageClasses.isEmpty()) {
+            throw new GradleException("Legacy Immersive Cooking package classes must not be packaged:\n" + legacyPackageClasses.join('\n'))
+        }
+
+        def importedClasses = entries.findAll {
+            it.startsWith('com/oblixorprime/immersivefarming/immersivecooking/') && it.endsWith('.class')
+        }
+        if (!importedClasses.isEmpty()) {
+            def inventory = file('MERGE_INVENTORY_IMMERSIVE_COOKING.md')
+            def documented = inventory.exists()
+                    && inventory.getText('UTF-8').contains('Java files under `src/main/java/com/oblixorprime/immersivefarming/immersivecooking`')
+                    && inventory.getText('UTF-8').contains('The code is initialized by the target `immersive_farming_mod_porting` mod entrypoint')
+            if (!documented) {
+                throw new GradleException("Packaged relocated Immersive Cooking classes are not documented as intentional:\n" + importedClasses.join('\n'))
+            }
+        }
+    }
+}
+
+tasks.register('validateEngineersManual') {
+    group = 'verification'
+    description = 'Validates Immersive Engineering manual autoload entries, bilingual text resources, and imported class packaging policy.'
+    dependsOn tasks.named('scanManualReferences')
+    dependsOn tasks.named('scanPackagedImportedClasses')
+}
+
+tasks.register('scanTranslationKeys') {
+    group = 'verification'
+    description = 'Checks that mod translation keys referenced from Java and sounds.json exist in en_us.json.'
+    doLast {
+        def langFile = file("src/main/resources/assets/${mod_id}/lang/en_us.json")
+        if (!langFile.exists()) {
+            throw new GradleException("Missing language file: ${langFile}")
+        }
+
+        def slurper = new groovy.json.JsonSlurper()
+        def langKeys = (slurper.parse(langFile) as Map).keySet() as Set
+        def referencedKeys = [] as Set
+
+        fileTree('src/main/java').matching { include '**/*.java' }.each { javaFile ->
+            def text = javaFile.getText('UTF-8')
+            (text =~ /(?:Component\.translatable|descriptionId)\("([^"]+)"\)/).each { match ->
+                def key = match[1]
+                if (key.contains(mod_id)) {
+                    referencedKeys << key
+                }
+            }
+        }
+
+        def soundsFile = file("src/main/resources/assets/${mod_id}/sounds.json")
+        if (soundsFile.exists()) {
+            def sounds = slurper.parse(soundsFile)
+            if (sounds instanceof Map) {
+                sounds.values().each { entry ->
+                    if (entry instanceof Map && entry.subtitle instanceof String && entry.subtitle.contains(mod_id)) {
+                        referencedKeys << entry.subtitle
+                    }
+                }
+            }
+        }
+
+        def missing = referencedKeys.collect { it.toString() }.findAll { !langKeys.contains(it) }.sort()
+        if (!missing.isEmpty()) {
+            throw new GradleException("Missing translation keys in ${langFile}:\n" + missing.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanImmersiveEngineeringSoundSubtitles') {
+    group = 'verification'
+    description = 'Checks local overlays cover known missing Immersive Engineering sound subtitle keys.'
+    doLast {
+        def slurper = new groovy.json.JsonSlurper()
+        def localResourceRoots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def langKeys = [] as Set
+
+        localResourceRoots.each { root ->
+            def overlayLang = file("${root}/assets/immersiveengineering/lang/en_us.json")
+            if (overlayLang.exists()) {
+                def overlayJson = slurper.parse(overlayLang)
+                if (overlayJson instanceof Map) {
+                    langKeys.addAll(overlayJson.keySet())
+                }
+            }
+        }
+
+        def ieJars = configurations.compileClasspath.files.findAll {
+            it.name.startsWith('ImmersiveEngineering-') && it.name.endsWith('.jar')
+        }
+        if (ieJars.isEmpty()) {
+            throw new GradleException('Could not find Immersive Engineering on the compile classpath for subtitle verification.')
+        }
+
+        def missing = []
+        ieJars.each { jarFile ->
+            def zip = new java.util.zip.ZipFile(jarFile)
+            try {
+                def langEntry = zip.getEntry('assets/immersiveengineering/lang/en_us.json')
+                if (langEntry != null) {
+                    def langJson = slurper.parse(zip.getInputStream(langEntry))
+                    if (langJson instanceof Map) {
+                        langKeys.addAll(langJson.keySet())
+                    }
+                }
+
+                def soundsEntry = zip.getEntry('assets/immersiveengineering/sounds.json')
+                if (soundsEntry != null) {
+                    def soundsJson = slurper.parse(zip.getInputStream(soundsEntry))
+                    if (soundsJson instanceof Map) {
+                        soundsJson.each { soundName, sound ->
+                            def ieOwnedSubtitle = sound instanceof Map
+                                    && sound.subtitle instanceof String
+                                    && (sound.subtitle.startsWith('subtitle.immersiveengineering.')
+                                    || sound.subtitle.startsWith('subtitles.immersiveengineering.'))
+                            if (ieOwnedSubtitle && !langKeys.contains(sound.subtitle)) {
+                                missing << "${jarFile.name}: sound ${soundName} references missing subtitle ${sound.subtitle}"
+                            }
+                        }
+                    }
+                }
+            }
+            finally {
+                zip.close()
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            throw new GradleException("Immersive Engineering sound subtitles are missing from dependency lang files and local overlays:\n" + missing.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanImmersiveCookingTranslations') {
+    group = 'verification'
+    description = 'Checks imported Immersive Cooking resources have English translations.'
+    doLast {
+        def root = file('src/main/resources')
+        def langFile = file("${root}/assets/immersivecooking/lang/en_us.json")
+        if (!langFile.exists()) {
+            throw new GradleException("Missing language file: ${langFile}")
+        }
+
+        def slurper = new groovy.json.JsonSlurper()
+        def langKeys = (slurper.parse(langFile) as Map).keySet() as Set
+        def referencedKeys = [] as Set
+
+        referencedKeys << 'itemGroup.immersivecooking'
+
+        def blockstateRoot = file("${root}/assets/immersivecooking/blockstates")
+        if (blockstateRoot.exists()) {
+            fileTree(blockstateRoot).matching { include '*.json' }.each { blockstate ->
+                def blockName = blockstate.name.replaceFirst(/\.json$/, '')
+                if (!blockName.endsWith('_fluid_block')) {
+                    referencedKeys << "block.immersivecooking.${blockName}"
+                }
+            }
+        }
+
+        def itemModelRoot = file("${root}/assets/immersivecooking/models/item")
+        if (itemModelRoot.exists()) {
+            fileTree(itemModelRoot).matching { include '*_bucket.json' }.each { model ->
+                def itemName = model.name.replaceFirst(/\.json$/, '')
+                referencedKeys << "item.immersivecooking.${itemName}"
+            }
+        }
+
+        def soundsFile = file("${root}/assets/immersivecooking/sounds.json")
+        if (soundsFile.exists()) {
+            def sounds = slurper.parse(soundsFile)
+            if (sounds instanceof Map) {
+                sounds.values().each { entry ->
+                    if (entry instanceof Map && entry.subtitle instanceof String) {
+                        referencedKeys << entry.subtitle
+                    }
+                }
+            }
+        }
+
+        def autoloadFile = file("${root}/assets/immersiveengineering/manual/autoload.json")
+        if (autoloadFile.exists()) {
+            def autoload = slurper.parse(autoloadFile)
+            if (autoload instanceof Map) {
+                autoload.each { key, value ->
+                    if (key instanceof String && key.startsWith('immersivecooking:')) {
+                        def category = key.split(':', 2)[1]
+                        referencedKeys << "manual.immersivecooking.${category}"
+                    }
+                    if (value instanceof Map && value.entry_list instanceof Collection) {
+                        value.entry_list.each { entry ->
+                            if (entry instanceof String && entry.startsWith('immersivecooking:')) {
+                                referencedKeys << "manual.immersivecooking.entry.${entry.split(':', 2)[1]}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        def missing = referencedKeys.collect { it.toString() }.findAll { !langKeys.contains(it) }.sort()
+        if (!missing.isEmpty()) {
+            throw new GradleException("Missing Immersive Cooking translation keys in ${langFile}:\n" + missing.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanImmersiveCookingGuiResources') {
+    group = 'verification'
+    description = 'Checks imported Immersive Cooking GUI textures and menu slot wiring.'
+    doLast {
+        def resourceRoot = file('src/main/resources')
+        def hits = []
+
+        def guiSourceRoot = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/client/gui')
+        if (guiSourceRoot.exists()) {
+            fileTree(guiSourceRoot).matching { include '**/*Screen.java' }.each { screen ->
+                def text = screen.getText('UTF-8')
+                (text =~ /Resource\.texture\("([^"]+)"\)/).each { match ->
+                    def texturePath = "assets/immersivecooking/textures/${match[1]}"
+                    if (!file("${resourceRoot}/${texturePath}").exists()) {
+                        hits << "${screen}: Resource.texture(\"${match[1]}\") is missing ${texturePath}"
+                    }
+                }
+            }
+        }
+
+        def foodProcessorMenu = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/gui/FoodProcessorMenu.java')
+        if (foodProcessorMenu.exists()) {
+            def normalized = foodProcessorMenu.getText('UTF-8').replaceAll(/\s+/, ' ')
+            if (!normalized.contains('i < FoodProcessorLogic.NUM_INPUT_SLOTS')) {
+                hits << "${foodProcessorMenu}: input slot loop must expose FoodProcessorLogic.NUM_INPUT_SLOTS"
+            }
+            if (!normalized.contains('this.ownSlotCount = FoodProcessorLogic.NUM_SLOTS')) {
+                hits << "${foodProcessorMenu}: ownSlotCount must stay tied to FoodProcessorLogic.NUM_SLOTS"
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Immersive Cooking GUI resource issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanInternalItemModels') {
+    group = 'verification'
+    description = 'Scans item models for resources attached to internal blocks without BlockItems.'
+    doLast {
+        def internalNoItemIds = ['composter'] as Set
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def hits = []
+        roots.each { root ->
+            def itemModelRoot = file("${root}/assets/${mod_id}/models/item")
+            if (itemModelRoot.exists()) {
+                fileTree(itemModelRoot).matching { include '*.json' }.each { model ->
+                    if (internalNoItemIds.contains(model.name.replaceFirst(/\.json$/, ''))) {
+                        hits << model
+                    }
+                }
+            }
+        }
+        if (!hits.isEmpty()) {
+            throw new GradleException("Internal non-item blocks have item models:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanSprinklerModelReferences') {
+    group = 'verification'
+    description = 'Checks that sprinkler models point at the matching normal/high-pressure OBJ assets.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def expectedModels = [
+                'models/item/sprinkler.json'              : "${mod_id}:models/block/sprinkler_normal_inv.obj",
+                'models/item/sprinkler_extended.json'     : "${mod_id}:models/block/sprinkler_high_inv.obj",
+                'models/block/sprinkler_top.json'         : "${mod_id}:models/dynamic/sprinkler_normal_top.obj",
+                'models/block/sprinkler_extended_top.json': "${mod_id}:models/dynamic/sprinkler_high_top_static.obj"
+        ]
+        def hits = []
+        def slurper = new groovy.json.JsonSlurper()
+
+        expectedModels.each { modelPath, expectedModel ->
+            def found = false
+            roots.each { root ->
+                def model = file("${root}/assets/${mod_id}/${modelPath}")
+                if (model.exists()) {
+                    found = true
+                    def json = slurper.parse(model)
+                    if (json.model != expectedModel) {
+                        hits << "${model}: expected model ${expectedModel}, found ${json.model}"
+                    }
+                }
+            }
+            if (!found) {
+                hits << "No model file found for assets/${mod_id}/${modelPath}"
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Sprinkler model references are inconsistent:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanComposterRecipeCoverage') {
+    group = 'verification'
+    description = 'Checks that industrial composter data includes both organic-material and compost output recipes.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def slurper = new groovy.json.JsonSlurper()
+        def fluidProductRecipes = []
+        def compostOutputRecipes = []
+        def invalidRecipes = []
+
+        roots.each { root ->
+            fileTree(root).matching {
+                include 'data/*/recipe/**/*.json'
+                include 'data/*/recipes/**/*.json'
+            }.each { recipeFile ->
+                def json = slurper.parse(recipeFile)
+                if (json.type != "${mod_id}:composter") {
+                    return
+                }
+                if (json.fluidProduct == true) {
+                    fluidProductRecipes << recipeFile
+                    def hasInput = json.input instanceof Map
+                    def hasFluidOutput = (json.output0 instanceof Map && json.output0.id instanceof String)
+                            || (json.output1 instanceof Map && json.output1.id instanceof String)
+                    if (!hasInput || !hasFluidOutput) {
+                        invalidRecipes << "${recipeFile}: fluidProduct recipes need input and output0/output1"
+                    }
+                }
+                else {
+                    compostOutputRecipes << recipeFile
+                    if (!(json.result instanceof Map) || !(json.input0 instanceof Map) || !(json.input1 instanceof Map) || !(json.input2 instanceof Map)) {
+                        invalidRecipes << "${recipeFile}: compost recipes need result and input0/input1/input2"
+                    }
+                }
+            }
+        }
+
+        if (fluidProductRecipes.isEmpty()) {
+            invalidRecipes << 'No item-to-fluid industrial composter recipes were found.'
+        }
+        if (compostOutputRecipes.isEmpty()) {
+            invalidRecipes << 'No fluid-to-compost industrial composter recipes were found.'
+        }
+        if (!invalidRecipes.isEmpty()) {
+            throw new GradleException("Industrial composter recipe coverage is incomplete:\n" + invalidRecipes.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanFoodProcessorRecipeCoverage') {
+    group = 'verification'
+    description = 'Checks that the merged Immersive Cooking Food Processor ships loadable default recipes.'
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def slurper = new groovy.json.JsonSlurper()
+        def expectedRecipePaths = [
+                'data/immersivecooking/recipe/food_processor/mushroom_stew.json',
+                'data/immersivecooking/recipe/food_processor/pumpkin_pie.json',
+                'data/immersivecooking/recipe/food_processor/wheat_dough.json'
+        ] as Set
+        def expectedFarmersDelightRecipePaths = [
+                'data/immersivecooking/recipe/compat/farmersdelight/food_processor/cabbage_leaf.json',
+                'data/immersivecooking/recipe/compat/farmersdelight/food_processor/raw_pasta.json',
+                'data/immersivecooking/recipe/compat/farmersdelight/food_processor/tomato_sauce.json',
+                'data/immersivecooking/recipe/compat/farmersdelight/food_processor/wheat_dough.json'
+        ] as Set
+        expectedFarmersDelightRecipePaths.addAll([
+                'apple_pie_slice',
+                'bacon',
+                'cake_slice',
+                'chicken_cuts',
+                'chocolate_pie_slice',
+                'cod_slice',
+                'cooked_chicken_cuts',
+                'cooked_cod_slice',
+                'cooked_mutton_chops',
+                'cooked_porkchop_from_smoked_ham',
+                'cooked_salmon_slice',
+                'minced_beef',
+                'mutton_chops',
+                'porkchop_from_ham',
+                'pumpkin_slice',
+                'rice',
+                'salmon_slice',
+                'sweet_berry_cheesecake_slice'
+        ].collect { "data/immersivecooking/recipe/compat/farmersdelight/food_processor/cutting/${it}.json" })
+        expectedFarmersDelightRecipePaths.addAll([
+                'apple_pie',
+                'bacon_and_eggs',
+                'bacon_sandwich',
+                'barbecue_stick',
+                'chicken_sandwich',
+                'chocolate_pie',
+                'cod_roll',
+                'egg_sandwich',
+                'fruit_salad',
+                'grilled_salmon',
+                'hamburger',
+                'horse_feed',
+                'honey_cookie',
+                'kelp_roll',
+                'melon_juice',
+                'melon_popsicle',
+                'mixed_salad',
+                'mutton_wrap',
+                'nether_salad',
+                'pie_crust',
+                'roasted_mutton_chops',
+                'salmon_roll',
+                'steak_and_potatoes',
+                'stuffed_potato',
+                'sweet_berry_cheesecake',
+                'sweet_berry_cookie'
+        ].collect { "data/immersivecooking/recipe/compat/farmersdelight/food_processor/assembly/${it}.json" })
+        def foundRecipePaths = [] as Set
+        def foodProcessorRecipes = []
+        def invalidRecipes = []
+
+        def expectedPathIsFoodProcessor = { String relativePath ->
+            roots.any { root ->
+                def recipeFile = new File(root, relativePath)
+                recipeFile.exists() && slurper.parse(recipeFile).type == 'immersivecooking:food_processor'
+            }
+        }
+
+        (expectedRecipePaths + expectedFarmersDelightRecipePaths).each { relativePath ->
+            if (!roots.any { root -> file("${root}/${relativePath}").exists() }) {
+                invalidRecipes << "Missing default Food Processor recipe: ${relativePath}"
+            }
+        }
+
+        roots.each { root ->
+            def recipeFiles = [] as Set
+            recipeFiles.addAll(fileTree(root).matching {
+                include 'data/immersivecooking/recipe/**/*.json'
+                include 'data/immersivecooking/recipe/compat/farmersdelight/food_processor/cutting/*.json'
+                include 'data/immersivecooking/recipe/compat/farmersdelight/food_processor/assembly/*.json'
+                include 'data/immersivecooking/recipes/**/*.json'
+            }.files)
+            (expectedRecipePaths + expectedFarmersDelightRecipePaths).each { relativePath ->
+                def expectedFile = new File(root, relativePath)
+                if (expectedFile.exists()) {
+                    recipeFiles << expectedFile
+                }
+            }
+
+            def rootPath = root.toPath().toAbsolutePath().normalize()
+            recipeFiles.each { recipeFile ->
+                def relativePath = rootPath.relativize(recipeFile.toPath().toAbsolutePath().normalize()).toString().replace('\\', '/')
+                def json = slurper.parse(recipeFile)
+                if (json.type == 'immersivecooking:food_processor') {
+                    foodProcessorRecipes << recipeFile
+                    foundRecipePaths << relativePath
+
+                    if (relativePath.startsWith('data/immersivecooking/recipes/')) {
+                        invalidRecipes << "${recipeFile}: use singular data/immersivecooking/recipe"
+                    }
+                    if (!(json.inputs instanceof List) || json.inputs.isEmpty()) {
+                        invalidRecipes << "${recipeFile}: Food Processor recipes need at least one input"
+                    }
+                    else if (json.inputs.size() > 8) {
+                        invalidRecipes << "${recipeFile}: Food Processor recipes can use at most 8 inputs"
+                    }
+                    json.inputs.eachWithIndex { input, index ->
+                        if (!(input instanceof Map)) {
+                            invalidRecipes << "${recipeFile}: Food Processor recipe inputs[${index}] must be an ingredient object"
+                        }
+                        else {
+                            if (input.count != null) {
+                                if (!(input.count instanceof Number) || input.count <= 0) {
+                                    invalidRecipes << "${recipeFile}: Food Processor recipe inputs[${index}].count must be positive"
+                                }
+                                if (!(input.basePredicate instanceof Map || input.basePredicate instanceof List)) {
+                                    invalidRecipes << "${recipeFile}: counted Food Processor inputs[${index}] must use basePredicate"
+                                }
+                                if (input.item instanceof String || input.tag instanceof String) {
+                                    invalidRecipes << "${recipeFile}: counted Food Processor inputs[${index}] must not use top-level item/tag"
+                                }
+                            }
+                            else if (input.basePredicate != null) {
+                                invalidRecipes << "${recipeFile}: Food Processor recipe inputs[${index}].basePredicate requires count"
+                            }
+                        }
+                    }
+                    if (!(json.result instanceof Map) || !(json.result.id instanceof String)) {
+                        invalidRecipes << "${recipeFile}: Food Processor recipe result must be an item stack object with id"
+                    }
+                    if (json.result instanceof Map && json.result.item instanceof String) {
+                        invalidRecipes << "${recipeFile}: Food Processor recipe result uses item; use id"
+                    }
+                    if (json.time instanceof Number && json.time <= 0) {
+                        invalidRecipes << "${recipeFile}: Food Processor recipe time must be positive"
+                    }
+                    if (json.energy instanceof Number && json.energy <= 0) {
+                        invalidRecipes << "${recipeFile}: Food Processor recipe energy must be positive"
+                    }
+                    if (expectedFarmersDelightRecipePaths.contains(relativePath)) {
+                        def conditions = json['neoforge:conditions'] instanceof List ? json['neoforge:conditions'] : []
+                        def gatedByFarmersDelight = conditions.any { condition ->
+                            condition instanceof Map && condition.type == 'neoforge:mod_loaded' && condition.modid == 'farmersdelight'
+                        }
+                        if (!gatedByFarmersDelight) {
+                            invalidRecipes << "${recipeFile}: Farmer's Delight Food Processor recipe must be gated by neoforge:mod_loaded farmersdelight"
+                        }
+                        def jsonText = recipeFile.getText('UTF-8')
+                        if (!jsonText.contains('farmersdelight:') && !jsonText.contains('c:crops/tomato') && !jsonText.contains('c:foods/dough')) {
+                            invalidRecipes << "${recipeFile}: Farmer's Delight Food Processor recipe does not reference Farmer's Delight content"
+                        }
+                    }
+                }
+            }
+        }
+
+        def packagedDefaultRecipes = foodProcessorRecipes.findAll { recipeFile ->
+            def root = roots.find { candidate -> recipeFile.toPath().startsWith(candidate.toPath()) }
+            def relativePath = root == null ? null : root.toPath().relativize(recipeFile.toPath()).toString().replace('\\', '/')
+            expectedRecipePaths.contains(relativePath)
+        }
+        if (packagedDefaultRecipes.isEmpty()) {
+            invalidRecipes << 'No packaged default Food Processor recipes were found.'
+        }
+        if (!foodProcessorRecipes.any { slurper.parse(it).fluid instanceof Map }) {
+            invalidRecipes << 'No fluid-assisted Food Processor recipe was found.'
+        }
+        if (!foodProcessorRecipes.any { !(slurper.parse(it).fluid instanceof Map) }) {
+            invalidRecipes << 'No dry Food Processor recipe was found.'
+        }
+        expectedRecipePaths.findAll { !foundRecipePaths.contains(it) && !expectedPathIsFoodProcessor(it) }.each { relativePath ->
+            invalidRecipes << "Default Food Processor recipe is not scanned as immersivecooking:food_processor: ${relativePath}"
+        }
+        expectedFarmersDelightRecipePaths.findAll { !foundRecipePaths.contains(it) && !expectedPathIsFoodProcessor(it) }.each { relativePath ->
+            invalidRecipes << "Farmer's Delight Food Processor recipe is not scanned as immersivecooking:food_processor: ${relativePath}"
+        }
+
+        if (!invalidRecipes.isEmpty()) {
+            throw new GradleException("Food Processor recipe coverage is incomplete:\n" + invalidRecipes.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanFarmersDelightCompatReferences') {
+    group = 'verification'
+    description = "Checks Farmer's Delight compat recipes reference items available in the configured dependency jar."
+    doLast {
+        def roots = [file('src/main/resources'), file('src/generated/resources')].findAll { it.exists() }
+        def recipeFiles = [] as Set
+        roots.each { root ->
+            recipeFiles.addAll(fileTree(root).matching {
+                include 'data/immersivecooking/recipe/compat/farmersdelight/**/*.json'
+            }.files)
+        }
+        if (recipeFiles.isEmpty()) {
+            return
+        }
+
+        def referencedIds = [] as Set
+        recipeFiles.each { recipeFile ->
+            (recipeFile.getText('UTF-8') =~ /farmersdelight:([a-z0-9_.\/-]+)/).each { match ->
+                referencedIds << match[1]
+            }
+        }
+        if (referencedIds.isEmpty()) {
+            return
+        }
+
+        def farmersDelightJar = configurations.compileClasspath.files.find { candidate ->
+            candidate.name.startsWith('farmers-delight-398521-') && candidate.name.endsWith('.jar')
+        }
+        if (farmersDelightJar == null) {
+            throw new GradleException("Could not resolve Farmer's Delight dependency jar for compat reference validation.")
+        }
+
+        def availableIds = [] as Set
+        def zip = new java.util.zip.ZipFile(farmersDelightJar)
+        try {
+            zip.entries().each { entry ->
+                def itemModelMatch = entry.name =~ /^assets\/farmersdelight\/models\/item\/([^\/]+)\.json$/
+                if (itemModelMatch.matches()) {
+                    availableIds << itemModelMatch.group(1)
+                }
+                def blockStateMatch = entry.name =~ /^assets\/farmersdelight\/blockstates\/([^\/]+)\.json$/
+                if (blockStateMatch.matches()) {
+                    availableIds << blockStateMatch.group(1)
+                }
+            }
+
+            def langEntry = zip.getEntry('assets/farmersdelight/lang/en_us.json')
+            if (langEntry != null) {
+                zip.getInputStream(langEntry).withCloseable { stream ->
+                    (stream.getText('UTF-8') =~ /"(?:item|block)\.farmersdelight\.([a-z0-9_.\/-]+)"/).each { match ->
+                        availableIds << match[1]
+                    }
+                }
+            }
+        }
+        finally {
+            zip.close()
+        }
+
+        def missingIds = referencedIds.findAll { id -> !availableIds.contains(id) }.sort()
+        if (!missingIds.isEmpty()) {
+            throw new GradleException("Farmer's Delight compat recipes reference unavailable items:\n"
+                    + missingIds.collect { id -> "farmersdelight:${id}" }.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanImmersiveCookingSoundAssignments') {
+    group = 'verification'
+    description = 'Checks Immersive Cooking machines use their own registered active sound events and subtitles.'
+    doLast {
+        def hits = []
+        def slurper = new groovy.json.JsonSlurper()
+        def contentFile = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/ICContent.java')
+        def processorLogicFile = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/blocks/multiblocks/logic/FoodProcessorLogic.java')
+        def soundsFile = file('src/main/resources/assets/immersivecooking/sounds.json')
+        def langFile = file('src/main/resources/assets/immersivecooking/lang/en_us.json')
+
+        def contentText = contentFile.exists() ? contentFile.getText('UTF-8') : ''
+        if (!contentText.contains('FOOD_PROCESSOR_ACTIVE = ICRegisters.registerSoundEvent("block.food_processor.active")')) {
+            hits << 'ICContent.Sounds must register block.food_processor.active as FOOD_PROCESSOR_ACTIVE'
+        }
+
+        def processorText = processorLogicFile.exists() ? processorLogicFile.getText('UTF-8') : ''
+        if (!processorText.contains('ICContent.Sounds.FOOD_PROCESSOR_ACTIVE')) {
+            hits << 'FoodProcessorLogic must start the processor active sound event'
+        }
+        if (processorText.contains('ICContent.Sounds.FOOD_FERMENTER_ACTIVE')) {
+            hits << 'FoodProcessorLogic must not reuse the Food Fermenter active sound event'
+        }
+
+        if (!soundsFile.exists()) {
+            hits << "Missing sounds file: ${soundsFile}"
+        }
+        else {
+            def sounds = slurper.parse(soundsFile)
+            def processorSound = sounds instanceof Map ? sounds['block.food_processor.active'] : null
+            if (!(processorSound instanceof Map)) {
+                hits << 'sounds.json must define block.food_processor.active'
+            }
+            else if (processorSound.subtitle != 'subtitle.immersivecooking.food_processor.active') {
+                hits << 'block.food_processor.active must reference subtitle.immersivecooking.food_processor.active'
+            }
+        }
+
+        if (!langFile.exists()) {
+            hits << "Missing language file: ${langFile}"
+        }
+        else {
+            def lang = slurper.parse(langFile) as Map
+            if (!lang.containsKey('subtitle.immersivecooking.food_processor.active')) {
+                hits << 'en_us.json must define subtitle.immersivecooking.food_processor.active'
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Immersive Cooking sound assignment issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
+tasks.register('scanImmersiveCookingRedstoneRegistration') {
+    group = 'verification'
+    description = 'Checks rsState-gated Immersive Cooking multiblocks expose IE redstone controls.'
+    doLast {
+        def hits = []
+        def contentFile = file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/ICContent.java')
+        def contentText = contentFile.exists() ? contentFile.getText('UTF-8') : ''
+        if (!contentFile.exists()) {
+            hits << "Missing content registration file: ${contentFile}"
+        }
+
+        [
+            [name: 'Cookpot', menu: 'COOKPOT', logic: file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/blocks/multiblocks/logic/CookpotLogic.java')],
+            [name: 'Food Fermenter', menu: 'FOOD_FERMENTER', logic: file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/blocks/multiblocks/logic/FoodFermenterLogic.java')],
+            [name: 'Food Processor', menu: 'FOOD_PROCESSOR', logic: file('src/main/java/com/oblixorprime/immersivefarming/immersivecooking/common/blocks/multiblocks/logic/FoodProcessorLogic.java')]
+        ].each { machine ->
+            if (!machine.logic.exists()) {
+                hits << "Missing logic file for ${machine.name}: ${machine.logic}"
+            }
+            else {
+                def logicText = machine.logic.getText('UTF-8')
+                def usesRedstoneState = logicText.contains('RedstoneControl.RSState') || logicText.contains('state.rsState.isEnabled')
+                def expectedRegistration = "builder -> builder.gui(MenuTypes.${machine.menu}).redstone(s -> s.rsState)"
+                if (usesRedstoneState && !contentText.contains(expectedRegistration)) {
+                    hits << "${machine.name} has rsState-based processing but its multiblock registration does not expose IE redstone control."
+                }
+            }
+        }
+
+        if (!hits.isEmpty()) {
+            throw new GradleException("Immersive Cooking redstone registration issues found:\n" + hits.join('\n'))
+        }
+    }
+}
+
 tasks.named('check') {
+    dependsOn tasks.named('validateEngineersManual')
     dependsOn tasks.named('scanAssets')
+    dependsOn tasks.named('scanNeoForgeObjModelLoaders')
+    dependsOn tasks.named('scanImmersiveCookingClientResources')
+    dependsOn tasks.named('scanFarmingFluidClientTextures')
+    dependsOn tasks.named('scanMultiblockTemplateResources')
+    dependsOn tasks.named('scanDataPackDirectoryNames')
+    dependsOn tasks.named('scanCommonTagNamespaces')
+    dependsOn tasks.named('scanOptionalCompatibilityTagEntries')
+    dependsOn tasks.named('scanDependencyVersionRanges')
+    dependsOn tasks.named('scanRecipeCompatibilityConditions')
+    dependsOn tasks.named('scanFarmAndCharmNamespaceReferences')
+    dependsOn tasks.named('scanRecipeSchemaCompatibility')
+    dependsOn tasks.named('scanRecipesForInvalidOutputs')
+    dependsOn tasks.named('scanFarmersDelightCompatReferences')
+    dependsOn tasks.named('scanManualReferences')
+    dependsOn tasks.named('scanPackagedImportedClasses')
+    dependsOn tasks.named('scanTranslationKeys')
+    dependsOn tasks.named('scanImmersiveEngineeringSoundSubtitles')
+    dependsOn tasks.named('scanImmersiveCookingSoundAssignments')
+    dependsOn tasks.named('scanImmersiveCookingRedstoneRegistration')
+    dependsOn tasks.named('scanImmersiveCookingTranslations')
+    dependsOn tasks.named('scanImmersiveCookingGuiResources')
+    dependsOn tasks.named('scanInternalItemModels')
+    dependsOn tasks.named('scanSprinklerModelReferences')
+    dependsOn tasks.named('scanComposterRecipeCoverage')
+    dependsOn tasks.named('scanFoodProcessorRecipeCoverage')
 }
 
 publishing {
@@ -119,7 +1549,7 @@ publishing {
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/repo"
+            url = file('repo').toURI()
         }
     }
 }

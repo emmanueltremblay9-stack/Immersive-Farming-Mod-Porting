@@ -1,0 +1,31 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 1200,
+  "inputs": [
+    {
+      "basePredicate": {
+        "item": "farmersdelight:cooked_rice"
+      },
+      "count": 2
+    },
+    {
+      "basePredicate": {
+        "item": "minecraft:dried_kelp"
+      },
+      "count": 3
+    },
+    {
+      "tag": "c:foods/vegetable"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:kelp_roll"
+  },
+  "time": 120,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

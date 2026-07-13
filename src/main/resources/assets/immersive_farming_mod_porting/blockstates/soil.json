@@ -1,0 +1,391 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "till": "0"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil0"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil0",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil0",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil0",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "1"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil1"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil1",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil1",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil1",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "2"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil2"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil2",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil2",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil2",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "3"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil3"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil3",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil3",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil3",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "4"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil4"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil4",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil4",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil4",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "5"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil5"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil5",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil5",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil5",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "6"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil6"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil6",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil6",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil6",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "0"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "1"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "2"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "3"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "4"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "5"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "6"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "7",
+        "fertility": "0"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "7",
+        "fertility": "1"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "till": "7",
+        "moisture": "7",
+        "fertility": "2"
+      },
+      "apply": [
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f"
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f",
+          "y": 90
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f",
+          "y": 180
+        },
+        {
+          "model": "immersive_farming_mod_porting:block/soil_moist_f",
+          "y": 270
+        }
+      ]
+    }
+  ]
+}

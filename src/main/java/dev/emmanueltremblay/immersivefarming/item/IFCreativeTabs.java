@@ -16,20 +16,17 @@ public final class IFCreativeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register(
             "main",
             () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.immersivefarming"))
+                    .title(Component.translatable("itemGroup.immersive_farming_mod_porting"))
                     .withTabsBefore(CreativeModeTabs.FUNCTIONAL_BLOCKS)
                     .icon(() -> IFBlocks.SPRINKLER.asItem().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(IFBlocks.SOIL.get());
                         output.accept(IFBlocks.SPRINKLER.get());
                         output.accept(IFBlocks.HIGH_PRESSURE_SPRINKLER.get());
-                        output.accept(IFBlocks.COMPOSTER.get());
                         output.accept(IFBlocks.DEAD_CROP.get());
                         output.accept(IFItems.TREATED_WATER_BUCKET.get());
                         output.accept(IFItems.COMPOST.get());
                         output.accept(IFItems.WHEEL.get());
-                        output.accept(IFItems.PLOW.get());
-                        output.accept(IFItems.SOWER.get());
                     })
                     .build()
     );

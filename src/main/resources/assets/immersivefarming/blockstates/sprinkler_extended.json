@@ -1,9 +1,0 @@
-{
-  "multipart": [
-    {
-      "apply": {
-        "model": "immersivefarming:block/sprinkler_extended"
-      }
-    }
-  ]
-}

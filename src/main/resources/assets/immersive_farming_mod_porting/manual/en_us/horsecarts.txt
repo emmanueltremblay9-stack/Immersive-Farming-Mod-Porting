@@ -1,0 +1,9 @@
+Cart Automation
+Native AstikorCarts equipment
+
+Immersive Farming no longer registers duplicate plow or sower adapter items. Those placeholders did not control carts and duplicated equipment already supplied by compatible cart mods.
+
+The treated-wood wheel recipe remains available as a crafting component.
+<&wheel>
+
+Use the native plow and sower supplied by AstikorCarts, AstikorCarts Redux, or the compatible cart mod installed in the pack. That mod owns their attachment, inventory, and field-work behavior.

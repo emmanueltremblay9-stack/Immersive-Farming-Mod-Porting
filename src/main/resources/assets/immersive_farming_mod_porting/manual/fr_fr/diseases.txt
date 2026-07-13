@@ -1,0 +1,10 @@
+Maladies des cultures
+Confinement et récupération
+
+<&disease_items>
+
+Lorsque les maladies sont activées, les blocs de culture sur Sol peuvent devenir malades aléatoirement. Un Sol malade peut contaminer les Sols de culture proches, et une maladie mortelle peut remplacer la culture au-dessus par une Culture morte pendant que le Sol redevient de la terre.
+
+La configuration serveur contrôle la chance de départ, la chance de propagation proche et la chance de létalité. Les valeurs par défaut sont volontairement basses, mais les champs denses en monoculture restent plus exposés parce que les cases de culture adjacentes peuvent propager la maladie.
+
+L'Eau traitée est la méthode de récupération. Si le Sol est irrigué par de l'Eau traitée, la maladie est retirée pendant les ticks aléatoires. Un réseau d'arroseurs traités sert donc à la fois d'hydratation et de réponse aux maladies.

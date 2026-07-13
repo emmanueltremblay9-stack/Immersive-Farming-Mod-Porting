@@ -1,0 +1,22 @@
+{
+  "type": "immersiveengineering:bottling_machine",
+  "energy": 6400,
+  "fluid": {
+    "amount": 1000,
+    "tag": "c:red_taiga_grapejuice"
+  },
+  "input": {
+    "item": "minecraft:bucket"
+  },
+  "results": [
+    {
+      "id": "immersivecooking:red_taiga_grapejuice_bucket"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vinery"
+    }
+  ]
+}

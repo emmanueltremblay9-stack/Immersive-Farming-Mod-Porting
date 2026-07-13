@@ -1,0 +1,29 @@
+{
+  "type": "immersivecooking:food_fermenter",
+  "container": {
+    "id": "vinery:wine_bottle"
+  },
+  "energy": 9600,
+  "fluid": {
+    "amount": 250,
+    "tag": "c:red_taiga_grapejuice"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:honey_bottle"
+    },
+    {
+      "item": "vinery:cherry"
+    }
+  ],
+  "result": {
+    "id": "vinery:bolvar_wine"
+  },
+  "time": 4800,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vinery"
+    }
+  ]
+}

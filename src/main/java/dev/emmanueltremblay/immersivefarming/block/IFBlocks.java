@@ -38,7 +38,7 @@ public final class IFBlocks {
             () -> new SprinklerBlock(true, metalNoOcclusion())
     );
 
-    public static final DeferredBlock<IndustrialComposterBlock> COMPOSTER = registerBlock(
+    public static final DeferredBlock<IndustrialComposterBlock> COMPOSTER = registerInternalBlock(
             "composter",
             () -> new IndustrialComposterBlock(metalNoOcclusion())
     );
@@ -73,5 +73,9 @@ public final class IFBlocks {
         DeferredBlock<T> registered = BLOCKS.register(name, block);
         IFItems.ITEMS.register(name, () -> new BlockItem(registered.get(), new Item.Properties()));
         return registered;
+    }
+
+    private static <T extends Block> DeferredBlock<T> registerInternalBlock(String name, Supplier<T> block) {
+        return BLOCKS.register(name, block);
     }
 }

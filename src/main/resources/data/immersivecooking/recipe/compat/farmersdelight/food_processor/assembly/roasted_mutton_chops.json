@@ -1,0 +1,31 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 1600,
+  "inputs": [
+    {
+      "item": "farmersdelight:cooked_mutton_chops"
+    },
+    {
+      "tag": "c:crops/beetroot"
+    },
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "farmersdelight:cooked_rice"
+    },
+    {
+      "tag": "c:crops/tomato"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:roasted_mutton_chops"
+  },
+  "time": 160,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

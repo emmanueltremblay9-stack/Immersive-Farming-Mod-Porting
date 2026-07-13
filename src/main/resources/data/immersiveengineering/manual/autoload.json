@@ -1,0 +1,17 @@
+{
+  "immersive_farming_mod_porting:overview": "immersive_farming_mod_porting:manual/overview",
+  "immersive_farming_mod_porting:quick_start": "immersive_farming_mod_porting:manual/quick_start",
+  "immersive_farming_mod_porting:irrigation": "immersive_farming_mod_porting:manual/irrigation",
+  "immersive_farming_mod_porting:fertility": "immersive_farming_mod_porting:manual/fertility",
+  "immersive_farming_mod_porting:diseases": "immersive_farming_mod_porting:manual/diseases",
+  "immersive_farming_mod_porting:composter": "immersive_farming_mod_porting:manual/composter",
+  "immersive_farming_mod_porting:recipe_index": "immersive_farming_mod_porting:manual/recipe_index",
+  "immersive_farming_mod_porting:horsecarts": "immersive_farming_mod_porting:manual/horsecarts",
+  "immersive_farming_mod_porting:configuration": "immersive_farming_mod_porting:manual/configuration",
+  "immersivecooking:kitchen_overview": "immersivecooking:manual/kitchen_overview",
+  "immersivecooking:cookpot": "immersivecooking:manual/cookpot",
+  "immersivecooking:food_fermenter": "immersivecooking:manual/food_fermenter",
+  "immersivecooking:grill_oven": "immersivecooking:manual/grill_oven",
+  "immersivecooking:food_processor": "immersivecooking:manual/food_processor",
+  "immersivecooking:compatibility": "immersivecooking:manual/compatibility"
+}

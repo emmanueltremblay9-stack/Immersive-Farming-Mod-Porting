@@ -1,0 +1,22 @@
+{
+  "block.cookpot.active": {
+    "subtitle": "subtitle.immersivecooking.cookpot.active",
+    "sounds": [
+      "immersivecooking:block/cookpot/boil_soup1",
+      "immersivecooking:block/cookpot/boil_soup2",
+      "immersivecooking:block/cookpot/boil_soup3"
+    ]
+  },
+  "block.food_fermenter.active": {
+    "subtitle": "subtitle.immersivecooking.food_fermenter.active",
+    "sounds": [
+      "immersivecooking:block/food_fermenter/compressor"
+    ]
+  },
+  "block.food_processor.active": {
+    "subtitle": "subtitle.immersivecooking.food_processor.active",
+    "sounds": [
+      "immersivecooking:block/food_fermenter/compressor"
+    ]
+  }
+}

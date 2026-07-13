@@ -1,0 +1,29 @@
+{
+  "type": "immersivecooking:food_fermenter",
+  "container": {
+    "id": "vinery:wine_bottle"
+  },
+  "energy": 9600,
+  "fluid": {
+    "amount": 250,
+    "tag": "c:red_jungle_grapejuice"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:spider_eye"
+    },
+    {
+      "item": "minecraft:honey_bottle"
+    }
+  ],
+  "result": {
+    "id": "vinery:chenet_wine"
+  },
+  "time": 4800,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vinery"
+    }
+  ]
+}

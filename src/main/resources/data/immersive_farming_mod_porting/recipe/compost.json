@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:bone_meal"
+    },
+    {
+      "tag": "immersive_farming_mod_porting:compostables"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "immersive_farming_mod_porting:compost"
+  }
+}

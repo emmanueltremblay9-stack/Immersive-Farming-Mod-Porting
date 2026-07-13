@@ -1,0 +1,10 @@
+Industrial Kitchen Overview
+Merged Immersive Cooking systems
+
+<&kitchen_blocks>
+
+The merged Immersive Cooking content keeps the upstream immersivecooking namespace inside the Immersive Farming jar. The registered kitchen multiblocks are Grill Oven, Industrial Cookpot, Industrial Food Fermenter, and Industrial Food Processor.
+
+Kitchen recipes are mostly data driven. The Cookpot uses immersivecooking:cookpot recipes and optional adapters for Farmer's Delight and Farm & Charm. The Food Fermenter uses immersivecooking:food_fermenter recipes and packaged compatibility recipes for Vinery and Farmer's Delight. The Food Processor uses bundled immersivecooking:food_processor recipes and accepts more recipes from data packs. The Grill Oven uses vanilla smoking recipes.
+
+Food Processor examples include water-assisted bread, pumpkin pie, mushroom stew, and a broad Farmer's Delight prep, cutting, pie, frozen, and cold assembly set when that mod is loaded. JEI exposes the recipe category when JEI is loaded.

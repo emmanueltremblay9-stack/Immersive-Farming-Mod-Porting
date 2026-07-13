@@ -1,0 +1,10 @@
+Vue d'ensemble des systèmes de champs
+Sol, eau, compost et maladies
+
+Immersive Farming Reforged ajoute au travail agricole normal un sol technique, l'irrigation, la production de compost et des règles de maladie des cultures. La boucle actuelle est simple: préparez le Sol, gardez-le humide, améliorez-le avec du Compost et utilisez de l'Eau traitée quand les maladies deviennent importantes.
+
+<&core_items>
+
+Le Sol stocke le labour, l'humidité, la fertilité et l'état de maladie. Les arroseurs hydratent les cultures proches depuis leurs réservoirs internes. Le Composteur industriel transforme les matières organiques en Matière verte ou Matière brune, puis combine ces fluides avec de l'eau pour produire du Compost.<np>
+
+Ce manuel décrit le contenu actuellement présent dans le jar. Les charrues et semoirs proviennent directement du mod de chariots compatible; Immersive Farming n'enregistre plus d'objets temporaires en double.

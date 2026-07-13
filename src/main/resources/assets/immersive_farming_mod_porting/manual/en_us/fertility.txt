@@ -1,0 +1,12 @@
+Soil Fertility
+Till depth and compost boosts
+
+<&soil_items>
+
+Soil has three important values: till, moisture, and fertility. Crops only sustain properly when till reaches the maximum value of 7. Using a hoe on Soil increases till; higher-tier hoes apply more till per use.
+
+Moisture comes from rain, nearby water, or active sprinklers. If Soil dries out and has no crop above it, it can return to dirt.
+
+<&compost>
+
+Right-click Soil with Compost to add fertility, up to the implemented cap. Fertility can force faster growth based on the server config. After a crop finishes a growth step on fertilized Soil, one fertility level is consumed.

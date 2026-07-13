@@ -1,12 +1,9 @@
 package dev.emmanueltremblay.immersivefarming.config;
 
-import dev.emmanueltremblay.immersivefarming.ImmersiveFarming;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-@EventBusSubscriber(modid = ImmersiveFarming.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public final class IFConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -15,7 +12,7 @@ public final class IFConfig {
             .define("enableDisease", true);
 
     private static final ModConfigSpec.BooleanValue ENABLE_FARMLAND_TRAMPLE_PROTECTION = BUILDER
-            .comment("Whether farmland and Immersive Farming soil resist trampling.")
+            .comment("Whether farmland and Immersive Farming Mod Porting soil resist trampling.")
             .define("enableFarmlandTrampleProtection", true);
 
     private static final ModConfigSpec.BooleanValue DISABLE_VANILLA_BONE_MEAL_ON_CROPS = BUILDER
@@ -66,7 +63,10 @@ public final class IFConfig {
     private IFConfig() {
     }
 
-    @SubscribeEvent
+    public static void register(IEventBus modEventBus) {
+        modEventBus.addListener(IFConfig::onConfigLoad);
+    }
+
     static void onConfigLoad(ModConfigEvent event) {
         if (event.getConfig().getSpec() != SPEC) {
             return;

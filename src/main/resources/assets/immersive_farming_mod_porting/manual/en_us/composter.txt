@@ -1,0 +1,21 @@
+Industrial Composter
+Green, brown, water, power
+
+<&multiblock>
+
+The Industrial Composter is a formed multiblock. Assemble the template shown here and use an Engineer's Hammer on the completed structure to form it. The formed machine exposes item, fluid, and energy capabilities from its master block.
+
+The machine has one item input slot, three 8,000 mB tanks, and a 16,000 FE energy buffer. It accepts water, Green Material, and Brown Material. Organic item recipes produce material fluids first: logs, saplings, and leaves produce Brown Material; crops, seeds, fruit, pumpkins, melons, and sugar cane produce Green Material.
+
+The compost recipe uses:
+
+Water: 10 mB
+
+Green Material: 10 mB
+
+Brown Material: 10 mB
+
+It also uses 500 FE for each compost operation. Item-to-fluid recipes use 10 FE and complete quickly.
+
+<&compost_result>
+When all three tanks contain enough fluid and enough energy is stored, one Compost is produced. The menu shows all three tanks, energy, and process progress.

@@ -15,8 +15,6 @@ public final class IFTags {
     }
 
     public static final class Items {
-        public static final TagKey<Item> ASTIKOR_REDUX_PLOW_COMPAT = TagKey.create(Registries.ITEM, ImmersiveFarming.id("astikor_redux_plow_compat"));
-        public static final TagKey<Item> ASTIKOR_REDUX_SOWER_COMPAT = TagKey.create(Registries.ITEM, ImmersiveFarming.id("astikor_redux_sower_compat"));
         public static final TagKey<Item> COMPOSTABLES = TagKey.create(Registries.ITEM, ImmersiveFarming.id("compostables"));
 
         private Items() {

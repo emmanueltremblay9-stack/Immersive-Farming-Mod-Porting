@@ -1,0 +1,21 @@
+Composteur industriel
+Vert, brun, eau, énergie
+
+<&multiblock>
+
+Le Composteur industriel est un multibloc formé. Assemblez le modèle montré ici et utilisez un Marteau d'ingénieur sur la structure complète pour le former. La machine formée expose ses capacités d'objets, de fluides et d'énergie depuis son bloc maître.
+
+La machine possède un emplacement d'entrée d'objet, trois réservoirs de 8 000 mB et un tampon d'énergie de 16 000 FE. Elle accepte l'eau, la Matière verte et la Matière brune. Les recettes d'objets organiques produisent d'abord des fluides de matière: les bûches, pousses d'arbres et feuilles donnent de la Matière brune; les cultures, graines, fruits, citrouilles, melons et cannes à sucre donnent de la Matière verte.
+
+La recette de compost utilise:
+
+Eau: 10 mB
+
+Matière verte: 10 mB
+
+Matière brune: 10 mB
+
+Elle utilise aussi 500 FE par opération de compost. Les recettes objet-vers-fluide utilisent 10 FE et se terminent rapidement.
+
+<&compost_result>
+Quand les trois réservoirs contiennent assez de fluide et que l'énergie stockée est suffisante, un Compost est produit. Le menu affiche les trois réservoirs, l'énergie et la progression.

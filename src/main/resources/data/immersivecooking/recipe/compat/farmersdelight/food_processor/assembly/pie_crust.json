@@ -1,0 +1,25 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 1200,
+  "inputs": [
+    {
+      "basePredicate": {
+        "tag": "c:crops/wheat"
+      },
+      "count": 3
+    },
+    {
+      "tag": "c:drinks/milk"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:pie_crust"
+  },
+  "time": 120,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

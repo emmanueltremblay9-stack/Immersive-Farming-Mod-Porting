@@ -1,0 +1,12 @@
+Transformateur alimentaire industriel
+Automatisation des plats prepares
+
+<&food_processor0>
+
+Le Transformateur alimentaire industriel est enregistré comme multibloc de style Immersive Engineering sous immersivecooking:food_processor. Son modèle de structure est inclus, son menu est enregistré, et il expose une entrée d'énergie ainsi qu'un réservoir de fluide de 12 000 mB.
+
+Le menu possède huit emplacements d'ingrédients, des emplacements de contenant de fluide entrant et sortant, et un emplacement de sortie. La machine possède un tampon d'énergie de 16 000 FE et traite les recettes immersivecooking:food_processor.
+
+Les recettes incluses transforment maintenant le ble avec de l'eau en pain, la citrouille avec un oeuf et du sucre en tarte a la citrouille, et un bol avec les deux champignons en ragout de champignons. Quand Farmer's Delight est charge, des recettes conditionnelles couvrent sa boucle de preparation adaptee au transformateur: pate et pates, sauce tomate, feuilles de chou, decoupes de viande et de poisson, pate a tarte, tartes et gateau au fromage entiers, parts de tartes et de gateaux, sandwichs, rouleaux, salades, biscuits, jus, assemblages froids ou glaces, et nourriture pour chevaux. Les data packs peuvent ajouter d'autres recettes au meme type de recette enregistre.
+
+<&default_recipes>

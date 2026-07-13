@@ -1,0 +1,12 @@
+Industrial Food Processor
+Prepared food automation
+
+<&food_processor0>
+
+The Industrial Food Processor is registered as an Immersive Engineering-style multiblock under immersivecooking:food_processor. Its structure template is packaged, its menu is registered, and it exposes an energy input plus a 12,000 mB fluid tank.
+
+The menu has eight ingredient slots, fluid container input and output slots, and one output slot. The machine owns a 16,000 FE energy buffer and processes immersivecooking:food_processor recipes.
+
+Bundled recipes now include wheat plus water into bread, pumpkin plus egg and sugar into pumpkin pie, and bowl plus red and brown mushrooms into mushroom stew. When Farmer's Delight is loaded, conditional recipes cover its processor-appropriate prep loop: dough and pasta, tomato sauce, cabbage leaves, meat and fish cuts, pie crust, whole pies and cheesecake, pie and cake slices, sandwiches, rolls, salads, cookies, juice, frozen/cold assemblies, and horse feed. Data packs can add more recipes to the same registered recipe type.
+
+<&default_recipes>

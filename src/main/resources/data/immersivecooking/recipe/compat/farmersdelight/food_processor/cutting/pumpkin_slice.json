@@ -1,0 +1,20 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 800,
+  "inputs": [
+    {
+      "item": "minecraft:pumpkin"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "farmersdelight:pumpkin_slice"
+  },
+  "time": 80,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "immersive_farming_mod_porting:composter",
+  "fluidProduct": true,
+  "input": {
+    "item": "minecraft:sugar_cane"
+  },
+  "output0": {
+    "id": "immersive_farming_mod_porting:wet_matter_fluid",
+    "amount": 10
+  },
+  "energy": 10
+}

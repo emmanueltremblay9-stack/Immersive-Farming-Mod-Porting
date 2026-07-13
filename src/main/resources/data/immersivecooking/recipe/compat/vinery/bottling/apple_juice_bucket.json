@@ -1,0 +1,22 @@
+{
+  "type": "immersiveengineering:bottling_machine",
+  "energy": 6400,
+  "fluid": {
+    "amount": 1000,
+    "tag": "c:apple_juice"
+  },
+  "input": {
+    "item": "minecraft:bucket"
+  },
+  "results": [
+    {
+      "id": "immersivecooking:apple_juice_bucket"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vinery"
+    }
+  ]
+}

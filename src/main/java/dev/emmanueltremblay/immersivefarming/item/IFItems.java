@@ -18,8 +18,6 @@ public final class IFItems {
 
     public static final DeferredItem<CompostItem> COMPOST = ITEMS.register("compost", () -> new CompostItem(new Item.Properties()));
     public static final DeferredItem<Item> WHEEL = ITEMS.registerSimpleItem("wheel");
-    public static final DeferredItem<Item> PLOW = ITEMS.register("plow", () -> new IntegrationPlaceholderItem(new Item.Properties().stacksTo(1)));
-    public static final DeferredItem<Item> SOWER = ITEMS.register("sower", () -> new IntegrationPlaceholderItem(new Item.Properties().stacksTo(1)));
 
     private IFItems() {
     }

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "level=0": { "model": "immersivecooking:block/juice_fluid" },
+    "level=1": { "model": "immersivecooking:block/juice_fluid" },
+    "level=2": { "model": "immersivecooking:block/juice_fluid" },
+    "level=3": { "model": "immersivecooking:block/juice_fluid" },
+    "level=4": { "model": "immersivecooking:block/juice_fluid" },
+    "level=5": { "model": "immersivecooking:block/juice_fluid" },
+    "level=6": { "model": "immersivecooking:block/juice_fluid" },
+    "level=7": { "model": "immersivecooking:block/juice_fluid" },
+    "level=8": { "model": "immersivecooking:block/juice_fluid" },
+    "level=9": { "model": "immersivecooking:block/juice_fluid" },
+    "level=10": { "model": "immersivecooking:block/juice_fluid" },
+    "level=11": { "model": "immersivecooking:block/juice_fluid" },
+    "level=12": { "model": "immersivecooking:block/juice_fluid" },
+    "level=13": { "model": "immersivecooking:block/juice_fluid" },
+    "level=14": { "model": "immersivecooking:block/juice_fluid" },
+    "level=15": { "model": "immersivecooking:block/juice_fluid" }
+  }
+}

@@ -12,7 +12,7 @@ public final class IFIntegrations {
             ImmersiveFarming.LOGGER.info("Immersive Engineering detected; manual/data compatibility resources are enabled.");
         }
         if (IFConfig.astikorReduxIntegration && ImmersiveFarming.isAstikorReduxLoaded()) {
-            ImmersiveFarming.LOGGER.info("AstikorCarts Redux-compatible mod detected; using optional compatibility recipes/tags.");
+            ImmersiveFarming.LOGGER.info("AstikorCarts-compatible mod detected; use its native plow and sower implementations.");
         }
     }
 }

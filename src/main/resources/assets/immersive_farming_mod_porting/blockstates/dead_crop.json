@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "immersive_farming_mod_porting:block/dead_crop"
+    }
+  }
+}

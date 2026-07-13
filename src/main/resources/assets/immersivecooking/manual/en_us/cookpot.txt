@@ -1,0 +1,9 @@
+Industrial Cookpot
+No chefs required!
+<&cookpot0>
+
+The Industrial Cookpot automates multi-input meal recipes. It has six input slots, one bowl/container slot, one raw output slot, one finished output slot, and a 16,000 FE energy buffer.
+
+Assemble the structure shown here, then click it with an Engineer's Hammer. Input items through the back input hatch. Pull finished items from the output side. Energy is supplied through the top connector.
+
+The default recipe provider reads immersivecooking:cookpot recipes. If Farmer's Delight is loaded, its cooking pot recipes are adapted. If Farm & Charm is loaded, cooking, roaster, and stove recipes are adapted. The redstone panel disables the machine when powered, unless inverted with the hammer.

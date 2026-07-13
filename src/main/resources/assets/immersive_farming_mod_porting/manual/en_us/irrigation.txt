@@ -1,0 +1,14 @@
+Irrigation
+Water coverage and treated water
+
+Soil checks for water near the field and for active sprinklers. Vanilla water keeps moisture up. Treated Water also clears disease from affected Soil.
+
+<&sprinkler>
+
+A Sprinkler is two blocks tall. The bottom block owns the tank and fluid handler. Fill it with water or Treated Water; it cannot mix both fluids in the same tank. A normal sprinkler covers radius 6 with up to 3 blocks of vertical tolerance and consumes 1 mB every 20 ticks while active.
+
+<&sprinkler_extended>
+
+The high pressure sprinkler covers radius 12 with the same vertical tolerance. It consumes 3 mB every 20 ticks, so reserve it for larger fields or central layouts.<np>
+
+Both sprinklers hydrate by area, not by individual crop list. Keep the top block clear and do not break only one half of the sprinkler unless you intend to remove the whole device.

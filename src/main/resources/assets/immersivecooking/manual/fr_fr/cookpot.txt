@@ -1,0 +1,9 @@
+Marmite industrielle
+Pas besoin de chef
+<&cookpot0>
+
+La Marmite industrielle automatise les recettes de repas à plusieurs entrées. Elle possède six emplacements d'entrée, un emplacement de bol ou contenant, un emplacement de sortie brute, un emplacement de sortie terminée et un tampon d'énergie de 16 000 FE.
+
+Assemblez la structure montrée ici, puis cliquez dessus avec un Marteau d'ingénieur. Insérez les ingrédients par la trappe d'entrée arrière. Récupérez les objets terminés du côté de sortie. L'énergie entre par le connecteur supérieur.
+
+Le fournisseur par défaut lit les recettes immersivecooking:cookpot. Si Farmer's Delight est chargé, ses recettes de marmite sont adaptées. Si Farm & Charm est chargé, les recettes de cuisine, de rôtissoire et de poêle sont adaptées. Le panneau redstone désactive la machine lorsqu'il est alimenté, sauf s'il est inversé avec le marteau.

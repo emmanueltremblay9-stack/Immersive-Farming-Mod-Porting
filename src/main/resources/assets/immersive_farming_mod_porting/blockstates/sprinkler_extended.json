@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "slave": "false"
+      },
+      "apply": {
+        "model": "immersive_farming_mod_porting:block/sprinkler_bottom"
+      }
+    },
+    {
+      "when": {
+        "slave": "true"
+      },
+      "apply": {
+        "model": "immersive_farming_mod_porting:block/sprinkler_top_base"
+      }
+    }
+  ]
+}

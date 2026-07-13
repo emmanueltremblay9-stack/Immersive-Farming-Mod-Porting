@@ -1,0 +1,12 @@
+Fertilité du sol
+Profondeur de labour et bonus de compost
+
+<&soil_items>
+
+Le Sol possède trois valeurs importantes: labour, humidité et fertilité. Les cultures ne sont bien soutenues que lorsque le labour atteint la valeur maximale de 7. Utiliser une houe sur le Sol augmente le labour; les houes de meilleur niveau en ajoutent davantage par utilisation.
+
+L'humidité vient de la pluie, de l'eau proche ou des arroseurs actifs. Si le Sol sèche et n'a aucune culture au-dessus, il peut redevenir de la terre.
+
+<&compost>
+
+Faites un clic droit sur le Sol avec du Compost pour ajouter de la fertilité, jusqu'à la limite implémentée. La fertilité peut forcer une croissance plus rapide selon la configuration serveur. Quand une culture termine une étape de croissance sur un Sol fertilisé, un niveau de fertilité est consommé.

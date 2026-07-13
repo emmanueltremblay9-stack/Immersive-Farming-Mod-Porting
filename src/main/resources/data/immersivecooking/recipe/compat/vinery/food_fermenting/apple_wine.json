@@ -1,0 +1,26 @@
+{
+  "type": "immersivecooking:food_fermenter",
+  "container": {
+    "id": "vinery:wine_bottle"
+  },
+  "energy": 9600,
+  "fluid": {
+    "amount": 250,
+    "tag": "c:apple_juice"
+  },
+  "inputs": [
+    {
+      "item": "vinery:apple_juice"
+    }
+  ],
+  "result": {
+    "id": "vinery:apple_wine"
+  },
+  "time": 4800,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vinery"
+    }
+  ]
+}

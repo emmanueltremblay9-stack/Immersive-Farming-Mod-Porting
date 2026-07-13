@@ -1,0 +1,20 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 800,
+  "inputs": [
+    {
+      "item": "minecraft:mutton"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "farmersdelight:mutton_chops"
+  },
+  "time": 80,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

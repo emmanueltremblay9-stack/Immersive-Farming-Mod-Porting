@@ -1,0 +1,14 @@
+Index des recettes
+Fabrication et traitement
+
+L'équipement agricole fabriqué commence avec des roues en bois traité. Les mods de chariots compatibles fournissent leurs propres charrues et semoirs fonctionnels.
+
+<&wheel>
+
+Le Compost peut être fabriqué directement en début de partie ou produit en grande quantité avec le Composteur industriel.
+
+<&compost>
+
+Le type de recette du Composteur industriel est immersive_farming_mod_porting:composter. Les recettes objet-vers-fluide créent de la Matière verte ou de la Matière brune. La recette finale de compost consomme de l'eau et les deux fluides de matière.
+
+Immersive Engineering fournit aussi dans ce jar une recette de Raffinerie pour l'Eau traitée. Utilisez JEI ou le livre de recettes des mods compatibles pour inspecter les piles d'ingrédients exactes quand les mods optionnels changent les recettes disponibles.

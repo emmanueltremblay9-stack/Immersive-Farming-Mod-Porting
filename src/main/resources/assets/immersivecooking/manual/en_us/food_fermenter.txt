@@ -1,0 +1,9 @@
+Industrial Food Fermenter
+Is it just me, or does it smell?
+<&food_fermenter0>
+
+The Food Fermenter processes solid ingredients plus optional fluid into fermented outputs. It has six ingredient slots, fluid container input and output slots, a dedicated container slot, a finished output slot, a 12,000 mB tank, and a 16,000 FE energy buffer.
+
+Assemble the structure shown here and form it with an Engineer's Hammer. Energy enters from the top connector. The fluid handler is on the fluid input side. Finished products are pushed to the output side when possible.
+
+The default provider reads immersivecooking:food_fermenter recipes. Packaged compatibility data includes Farmer's Delight rich soil and many Vinery fermentation recipes when those optional mods are loaded. Redstone disables the machine unless inverted with the hammer.

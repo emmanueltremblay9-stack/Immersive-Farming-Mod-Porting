@@ -1,0 +1,16 @@
+Configuration
+Server-side farming rules
+
+The common config controls the main farming systems.
+
+enableDisease enables crop disease logic. The chance values are startDiseaseChance, proximityDiseaseChance, and diseaseLethalityChance.
+
+enableFarmlandTrampleProtection cancels farmland trampling when enabled.
+
+disableVanillaBoneMealOnCrops prevents vanilla bone meal from forcing crop growth, while still leaving grass behavior alone.
+
+sprinklerRadius defaults to 6. highPressureSprinklerRadius defaults to 12.
+
+compostGrowthMultiplier defaults to 1.5 and controls how strongly fertility can force extra growth. astikorReduxIntegration controls cart integration behavior where the compatible cart mod is present.<np>
+
+Config values are read from the NeoForge common config. Server owners should sync the config they test with before comparing crop timing or disease behavior.

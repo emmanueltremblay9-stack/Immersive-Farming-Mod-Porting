@@ -1,0 +1,14 @@
+Recipe Index
+Crafting and processing
+
+Crafted field equipment starts with treated-wood wheels. Compatible cart mods provide their own functional plow and sower items.
+
+<&wheel>
+
+Compost can be made directly for early play or produced at scale through the Industrial Composter.
+
+<&compost>
+
+The Industrial Composter recipe type is immersive_farming_mod_porting:composter. Item-to-fluid recipes create Green Material or Brown Material. The final compost recipe consumes water plus both material fluids.
+
+Immersive Engineering also supplies a Refinery recipe for Treated Water in this jar. Use JEI or the recipe book from compatible mods to inspect exact ingredient stacks when optional mods alter available recipes.

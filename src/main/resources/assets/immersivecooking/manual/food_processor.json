@@ -1,0 +1,20 @@
+{
+  "food_processor0": {
+    "type": "multiblock",
+    "name": "immersivecooking:multiblocks/food_processor"
+  },
+  "default_recipes": {
+    "type": "item_display",
+    "items": [
+      {
+        "id": "minecraft:bread"
+      },
+      {
+        "id": "minecraft:pumpkin_pie"
+      },
+      {
+        "id": "minecraft:mushroom_stew"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+Configuration
+Règles agricoles côté serveur
+
+La configuration commune contrôle les principaux systèmes agricoles.
+
+enableDisease active la logique de maladie des cultures. Les valeurs de chance sont startDiseaseChance, proximityDiseaseChance et diseaseLethalityChance.
+
+enableFarmlandTrampleProtection annule le piétinement des terres labourées lorsqu'elle est activée.
+
+disableVanillaBoneMealOnCrops empêche la poudre d'os vanilla de forcer la croissance des cultures, tout en laissant le comportement de l'herbe inchangé.
+
+sprinklerRadius vaut 6 par défaut. highPressureSprinklerRadius vaut 12 par défaut.
+
+compostGrowthMultiplier vaut 1.5 par défaut et contrôle la force avec laquelle la fertilité peut forcer une croissance supplémentaire. astikorReduxIntegration contrôle le comportement d'intégration des chariots lorsqu'un mod de chariot compatible est présent.<np>
+
+Les valeurs de configuration sont lues depuis la configuration commune NeoForge. Les administrateurs de serveur devraient synchroniser la configuration testée avant de comparer les temps de croissance ou le comportement des maladies.

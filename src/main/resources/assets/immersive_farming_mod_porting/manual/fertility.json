@@ -1,0 +1,17 @@
+{
+  "soil_items": {
+    "type": "item_display",
+    "items": [
+      {
+        "id": "immersive_farming_mod_porting:soil"
+      },
+      {
+        "id": "immersive_farming_mod_porting:compost"
+      }
+    ]
+  },
+  "compost": {
+    "type": "crafting",
+    "recipe": "immersive_farming_mod_porting:compost"
+  }
+}

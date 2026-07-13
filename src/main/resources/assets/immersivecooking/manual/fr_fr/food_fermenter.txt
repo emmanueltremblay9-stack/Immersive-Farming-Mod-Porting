@@ -1,0 +1,9 @@
+Fermenteur alimentaire industriel
+Ça sent la fermentation
+<&food_fermenter0>
+
+Le Fermenteur alimentaire transforme des ingrédients solides et un fluide optionnel en produits fermentés. Il possède six emplacements d'ingrédients, des emplacements de contenant de fluide entrant et sortant, un emplacement de contenant dédié, un emplacement de sortie, un réservoir de 12 000 mB et un tampon d'énergie de 16 000 FE.
+
+Assemblez la structure montrée ici et formez-la avec un Marteau d'ingénieur. L'énergie entre par le connecteur supérieur. Le gestionnaire de fluide se trouve du côté d'entrée de fluide. Les produits terminés sont poussés vers le côté de sortie lorsque c'est possible.
+
+Le fournisseur par défaut lit les recettes immersivecooking:food_fermenter. Les données de compatibilité incluses ajoutent la terre riche de Farmer's Delight et de nombreuses recettes de fermentation Vinery lorsque ces mods optionnels sont chargés. La redstone désactive la machine sauf si elle est inversée avec le marteau.

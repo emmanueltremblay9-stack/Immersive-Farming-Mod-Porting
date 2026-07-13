@@ -1,0 +1,19 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 800,
+  "inputs": [
+    {
+      "tag": "c:foods/dough"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:raw_pasta"
+  },
+  "time": 80,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

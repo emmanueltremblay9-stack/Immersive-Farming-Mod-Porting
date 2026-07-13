@@ -1,0 +1,14 @@
+Irrigation
+Couverture d'eau et eau traitée
+
+Le Sol cherche l'eau près du champ et les arroseurs actifs. L'eau vanilla maintient l'humidité. L'Eau traitée enlève aussi les maladies du Sol affecté.
+
+<&sprinkler>
+
+Un Arroseur fait deux blocs de haut. Le bloc du bas possède le réservoir et le gestionnaire de fluide. Remplissez-le avec de l'eau ou de l'Eau traitée; il ne peut pas mélanger les deux fluides dans le même réservoir. Un arroseur normal couvre un rayon de 6 avec une tolérance verticale de 3 blocs et consomme 1 mB toutes les 20 ticks lorsqu'il est actif.
+
+<&sprinkler_extended>
+
+L'arroseur haute pression couvre un rayon de 12 avec la même tolérance verticale. Il consomme 3 mB toutes les 20 ticks; réservez-le donc aux grands champs ou aux plans centraux.<np>
+
+Les deux arroseurs hydratent une zone, pas une liste individuelle de cultures. Gardez le bloc supérieur libre et ne cassez pas seulement une moitié de l'arroseur sauf si vous voulez enlever tout l'appareil.

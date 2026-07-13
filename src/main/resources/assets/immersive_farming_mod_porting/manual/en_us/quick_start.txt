@@ -1,0 +1,16 @@
+Quick Start
+From vanilla field to engineered field
+
+1. Craft Compost from bone meal and a compostable item, or build the Industrial Composter for bulk production.
+
+<&compost>
+
+2. Till dirt with a hoe to create Soil. Better hoes apply more till in one use. Crops on Soil need maximum till before they can grow.
+
+3. Add water. Vanilla water hydrates Soil, but Treated Water also clears disease.
+
+<&sprinkler>
+
+4. Place a Sprinkler as a two-block-tall device and fill it with water or Treated Water through its fluid handler. A normal sprinkler covers radius 6. The high pressure sprinkler covers radius 12 and consumes more fluid.<np>
+
+5. Plant crops, watch for disease, and use Compost on Soil when you want the next growth cycle to accelerate.

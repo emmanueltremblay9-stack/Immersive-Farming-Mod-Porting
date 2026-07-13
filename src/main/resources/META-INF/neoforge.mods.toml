@@ -8,7 +8,7 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 logoFile="logo.png"
-credits="Original Immersive Farming by Etyl. Original assets credited to Peter. AstikorCarts credit preserved where compatibility/history is relevant."
+credits="Original Immersive Farming by Etyl. Original assets credited to Peter. AstikorCarts credit preserved where compatibility/history is relevant. Includes MIT-licensed code and assets adapted from Immersive Cooking & Farming by akki697222; Farmer's Delight-derived portions retain the original vectorwing copyright notice."
 authors="${mod_authors}"
 description='''${mod_description}'''
 
@@ -28,28 +28,63 @@ description='''${mod_description}'''
 
 [[dependencies.${mod_id}]]
     modId="immersiveengineering"
-    type="optional"
-    versionRange="[1.21.1,)"
+    type="required"
+    versionRange="${immersiveengineering_version_range}"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="astikorcarts"
     type="optional"
-    versionRange="[1.21.1,)"
+    versionRange="${optional_compat_version_range}"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="astikorcartsredux"
     type="optional"
-    versionRange="[1.21.1,)"
+    versionRange="${optional_compat_version_range}"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="astikorredux"
     type="optional"
-    versionRange="[1.21.1,)"
+    versionRange="${optional_compat_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    versionRange="[19.27.0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="farmersdelight"
+    type="optional"
+    versionRange="${farmersdelight_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="farm_and_charm"
+    type="optional"
+    versionRange="[1.1.0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="vinery"
+    type="optional"
+    versionRange="${optional_compat_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="architectury"
+    type="optional"
+    versionRange="[13.0.0,)"
     ordering="AFTER"
     side="BOTH"

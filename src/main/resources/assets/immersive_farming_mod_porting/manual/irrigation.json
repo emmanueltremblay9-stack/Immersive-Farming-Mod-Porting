@@ -1,0 +1,10 @@
+{
+  "sprinkler": {
+    "type": "crafting",
+    "recipe": "immersive_farming_mod_porting:sprinkler"
+  },
+  "sprinkler_extended": {
+    "type": "crafting",
+    "recipe": "immersive_farming_mod_porting:sprinkler_extended"
+  }
+}

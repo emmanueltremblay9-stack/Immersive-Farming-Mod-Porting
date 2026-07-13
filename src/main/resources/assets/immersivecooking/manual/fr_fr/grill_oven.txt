@@ -1,0 +1,9 @@
+Four-gril
+Fumage à trois emplacements
+<&grill_oven0>
+
+Le Four-gril est le multibloc de cuisine le plus simple. Il expose la gestion d'objets partout, possède trois emplacements de cuisson et utilise un quatrième emplacement pour le combustible de fumage.
+
+Chaque emplacement de cuisson accepte les objets ayant une recette de fumage vanilla. Le combustible est consommé lorsqu'un travail est disponible. La sortie remplace la pile d'entrée dans le même emplacement lorsque la cuisson se termine.
+
+Comme le Four-gril délègue aux recettes de fumage vanilla, les data packs et mods qui ajoutent des recettes de fumage augmentent automatiquement ses entrées utilisables. Il n'utilise pas de FE.

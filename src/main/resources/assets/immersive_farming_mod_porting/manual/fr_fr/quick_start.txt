@@ -1,0 +1,16 @@
+Démarrage rapide
+Du champ vanilla au champ technique
+
+1. Fabriquez du Compost avec de la poudre d'os et un objet compostable, ou construisez le Composteur industriel pour une production en grande quantité.
+
+<&compost>
+
+2. Labourez de la terre avec une houe pour créer du Sol. Les meilleures houes appliquent plus de labour en une utilisation. Les cultures sur Sol ont besoin du labour maximum pour pousser.
+
+3. Ajoutez de l'eau. L'eau vanilla hydrate le Sol, mais l'Eau traitée enlève aussi les maladies.
+
+<&sprinkler>
+
+4. Placez un Arroseur comme appareil de deux blocs de haut et remplissez-le d'eau ou d'Eau traitée par son gestionnaire de fluide. Un arroseur normal couvre un rayon de 6. L'arroseur haute pression couvre un rayon de 12 et consomme plus de fluide.<np>
+
+5. Plantez les cultures, surveillez les maladies et utilisez du Compost sur le Sol lorsque vous voulez accélérer le prochain cycle de croissance.

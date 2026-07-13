@@ -1,0 +1,22 @@
+{
+  "core_items": {
+    "type": "item_display",
+    "items": [
+      {
+        "id": "immersive_farming_mod_porting:soil"
+      },
+      {
+        "id": "immersive_farming_mod_porting:sprinkler"
+      },
+      {
+        "id": "immersive_farming_mod_porting:sprinkler_extended"
+      },
+      {
+        "id": "immersive_farming_mod_porting:compost"
+      },
+      {
+        "id": "immersive_farming_mod_porting:treated_water_bucket"
+      }
+    ]
+  }
+}

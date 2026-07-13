@@ -1,0 +1,31 @@
+{
+  "type": "immersivecooking:food_processor",
+  "energy": 1600,
+  "inputs": [
+    {
+      "tag": "c:foods/cooked_salmon"
+    },
+    {
+      "item": "minecraft:sweet_berries"
+    },
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "tag": "c:crops/cabbage"
+    },
+    {
+      "tag": "c:crops/onion"
+    }
+  ],
+  "result": {
+    "id": "farmersdelight:grilled_salmon"
+  },
+  "time": 160,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ]
+}

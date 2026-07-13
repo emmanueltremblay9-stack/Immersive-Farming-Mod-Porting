@@ -25,3 +25,12 @@ runs
 run-data
 
 repo
+
+# Codex local machine configuration
+.codex/local.env
+
+# Local analysis and attachment caches
+.codegraph/
+.codebase-memory/
+.understand-anything/
+.codex-remote-attachments/
